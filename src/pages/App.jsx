@@ -4,6 +4,7 @@ import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclam
 import img from '@/assets/img/b.png'
 import logo from '@/assets/img/g_heredia.png'
 import authentication from '@/api/auth';
+import "@patternfly/react-core/dist/styles/base.css";
 function App() {
   const [validate,setValidate] = useState({
     isValidUsername:true,

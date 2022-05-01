@@ -1,5 +1,5 @@
 
-import { authenticated } from "@/plugins/auth"
+import { authenticated } from "../service/auth"
 const kaycloak = (username,password)=>{
     var params = new URLSearchParams();
     params.append('username', username);
@@ -9,18 +9,27 @@ const kaycloak = (username,password)=>{
     params.append('client_secret', import.meta.env.VITE_SECRET_CLIENT);
     return params;
 }
-//const dispatch = useDispatch();
 const authentication = {
     login: async(username,password)=>{
         const token = await authenticated.post('/protocol/openid-connect/token',kaycloak(username,password));
         if(token){
-            console.log(token)
-            localStorage.setItem('session',token.data)
-            //dispatch(addSession(token.data))
+            if(token.status==200){
+                const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
+                if(userinfo){
+                    if(userinfo.status==200){
+                        return {
+                            ...token.data,
+                            user:{
+                                ...userinfo.data
+                            }
+                        }
+                    }
+                }
+            }
         }
-       //const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
+       return null;
     },
-    logout:()=>{
+    logout: async()=>{
     /*
     http://127.0.0.1:8180/auth/admin/realms/heroes/users/83c72e88-7ac9-4fc7-a7fb-97736d67d261/logout
     post
