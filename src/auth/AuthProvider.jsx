@@ -20,9 +20,17 @@ function AuthProvider({ children }) {
     useEffect(() => {
         /**api getCurrentUser */
         (async()=>{
-            setTimeout(() => {
+            try {
+                const user = await authentication.refresh_session();
+                if(user){
+                    setSession(user)
+                    navigate('/')
+                }
+            } catch (error) {
+                console.log(error)
+            }finally{
                 setLoadingInitial(false); 
-            }, 3600);
+            }
         })()
         
     }, [])
