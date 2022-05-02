@@ -6,8 +6,8 @@ import { authenticated } from "../service/auth";
 const AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
-    const [session, setSession] = useState();
-    const [error, setError] = useState();
+    const [session, setSession] = useState(null);
+    const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [loadingInitial, setLoadingInitial] = useState(true);
     const location = useLocation();
@@ -27,7 +27,7 @@ function AuthProvider({ children }) {
                     navigate('/')
                 }
             } catch (error) {
-                console.log(error)
+                setError(error)
             }finally{
                 setLoadingInitial(false); 
             }
@@ -44,6 +44,7 @@ function AuthProvider({ children }) {
                 setSession(data);
                 navigate('/')
             }
+            
         } catch (error) {
             setError(error)
         } finally {

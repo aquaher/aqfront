@@ -25,11 +25,7 @@ const authentication = {
                     'Max-Age': token.data.refresh_expires_in,
                     secure: true
                 })
-                const userinfo = await authenticated.get('/protocol/openid-connect/userinfo', {
-                    headers: {
-                        'Authorization': 'Bearer ' + token.data.access_token
-                    }
-                })
+                const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
                 if (userinfo) {
                     if (userinfo.status == 200) {
                         return {
@@ -44,7 +40,6 @@ const authentication = {
                 }
             }
         }
-        return null;
     },
     logout: async () => {
         /*
@@ -54,18 +49,20 @@ const authentication = {
         */
     },
     refresh_session: async () => {
-        const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
-        if (userinfo) {
-            if (userinfo.status == 200) {
-                return {
-                    access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
-                    user: {
-                        ...userinfo.data
+        const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN);
+        if(token){
+            const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
+            if (userinfo) {
+                if (userinfo.status == 200) {
+                    return {
+                        access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
+                        user: {
+                            ...userinfo.data
+                        }
                     }
                 }
-            }
+            }  
         }
-        return null;
     }
 }
 export default authentication;

@@ -1,5 +1,5 @@
 import { Navigate, Routes, Route } from "react-router-dom";
-import { useSession } from "./auth/AuthProvider";
+import { useSession } from "@/auth/AuthProvider";
 import App from "./pages/App";
 import Index from "./pages/Index";
 

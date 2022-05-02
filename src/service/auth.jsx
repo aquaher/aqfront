@@ -8,7 +8,7 @@ function Axios () {
         baseURL: import.meta.env.VITE_BASE_AUTH
     })
     instance.interceptors.request.use(async (request) => {
-        const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN)
+        const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN);
         
         if (token) {
             request.headers.Authorization = `Bearer ${token}`;

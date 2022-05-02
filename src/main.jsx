@@ -8,6 +8,7 @@ import { theme } from './theme';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
 import { Navigation } from './router';
+import 'sweetalert2/dist/sweetalert2.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
