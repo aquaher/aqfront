@@ -5,49 +5,61 @@ import { authenticated } from "../service/auth";
 
 const AuthContext = createContext(null);
 
-function AuthProvider({children}){
-    const [session,setSession] = useState();
-    const [error,setError] = useState();
+function AuthProvider({ children }) {
+    const [session, setSession] = useState();
+    const [error, setError] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [loadingInitial, setLoadingInitial] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        if(error) setError(null);
-    },[location.pathname])
+    useEffect(() => {
+        if (error) setError(null);
+    }, [location.pathname])
 
-    useEffect(()=>{
+    useEffect(() => {
         /**api getCurrentUser */
-        setLoadingInitial(false);
-    },[])
+        (async()=>{
+            setTimeout(() => {
+                setLoadingInitial(false); 
+            }, 3600);
+        })()
+        
+    }, [])
 
-    function signIn(username,password){
+    async function signIn(username, password) {
         setIsLoading(true);
-        authentication.login(username,password)
-        .then((data)=>{
-            setSession(data)
-        })
-        .catch(err=>setError(err))
-        .finally(()=>setIsLoading(false));
+        try {
+            const data = await authentication.login(username, password);
+            if (data) {
+                console.log(data)
+                setSession(data);
+                navigate('/')
+            }
+        } catch (error) {
+            setError(error)
+        } finally {
+            setIsLoading(false)
+        }
+
     }
-    function signUp(){
-        authentication.logout().then(()=>setSession(undefined));
+    async function signOut() {
+        authentication.logout().then(() => setSession(undefined));
     }
 
-    const value = useMemo(()=>({
-        session,isLoading,loadingInitial,signIn,signUp,error
-    },[session, isLoading, error]))
+    const value = useMemo(() => ({
+        session, isLoading, loadingInitial, signIn, signOut, error
+    }), [session, isLoading, error])
 
-    return(<AuthContext.Provider value={value}>{!loadingInitial&&children}</AuthContext.Provider>)
+    return (<AuthContext.Provider value={value}>{!loadingInitial && children}</AuthContext.Provider>)
 }
 
-function useAuth(){
+function useAuth() {
     return useContext(AuthContext);
 }
 
-function useSession(){
-    const {session} = useContext(AuthContext);
+function useSession() {
+    const { session } = useContext(AuthContext);
     return session;
 }
 export {

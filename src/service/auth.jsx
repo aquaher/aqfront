@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function Axios () {
     const instance = axios.create({
-        baseURL: import.meta.env.VITE_AUTH
+        baseURL: import.meta.env.VITE_BASE_AUTH
     })
     /*instance.interceptors.request.use(async (request) => {
         const active_session = useSelector(session);

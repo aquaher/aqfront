@@ -3,9 +3,10 @@ import { LoginForm, LoginPage,LoginMainFooterBandItem } from '@patternfly/react-
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import img from '@/assets/img/b.png'
 import logo from '@/assets/img/g_heredia.png'
-import authentication from '@/api/auth';
 import "@patternfly/react-core/dist/styles/base.css";
+import { useAuth } from '@/auth/AuthProvider';
 function App() {
+  const {signIn} = useAuth();
   const [validate,setValidate] = useState({
     isValidUsername:true,
     isValidPassword:true,
@@ -20,19 +21,7 @@ function App() {
   function recuerdame(e){}
   async function login(e){
     e.preventDefault();
-    authentication.login(form.username,form.password);
-    /*var params = new URLSearchParams();
-    params.append('username', 'o123');
-    params.append('password', '123');
-    params.append('grant_type', 'password');
-    params.append('client_id', 'frontend');
-    params.append('client_secret', 'FQhasxZYJDY3lHYF0zTZukZIpFgoAM23');
-    const instance = axios.create({
-      baseURL: 'http://localhost:63110/realms/aquaher/'
-    })
-    instance.post('/protocol/openid-connect/token', params)
-      .then(e => console.log(e))
-      .catch(e => console.log(e))*/
+    await signIn(form.username,form.password);
   }
   const Formulario =()=>{
     return(
