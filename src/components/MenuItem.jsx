@@ -1,0 +1,41 @@
+import { ExpandLessOutlined, ExpandMoreOutlined } from "@mui/icons-material";
+import { ListItem, ListItemIcon, ListItemText, Collapse, List } from "@mui/material";
+import { useState } from "react";
+import { hasChildren } from "./utils";
+
+export default function MenuItem({item}){
+    const Menu = hasChildren(item)? MultiLevel:SingleLevel;
+    return <Menu item={item}/>
+}
+function SingleLevel({item}){
+    return(
+        <ListItem button>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText>{item.title}</ListItemText>
+        </ListItem>
+    );
+}
+function MultiLevel({item}){
+    const {items: children} = item;
+    const [open,setOpen] = useState(false);
+
+    function handleClick(e){
+        setOpen(!open)
+    }
+    return(
+        <>
+        <ListItem button onClick={handleClick}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.title}/>
+            {open?<ExpandLessOutlined/>:<ExpandMoreOutlined/>}
+        </ListItem>
+        <Collapse in={open} timeout='auto' unmountOnExit>
+            <List component='div' disablePadding>
+                {children.map((child,key)=>(
+                    <MenuItem key={key} item={child}/>
+                ))}
+            </List>
+        </Collapse>
+        </>
+    );
+}
