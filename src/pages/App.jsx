@@ -6,9 +6,8 @@ import logo from '@/assets/img/g_heredia.png'
 import "@patternfly/react-core/dist/styles/base.css";
 import { useAuth } from '@/auth/AuthProvider';
 import { AlertSwal } from '@/service/sweetAlert';
-import Swal from 'sweetalert2';
 function App() {
-  const { signIn, error } = useAuth();
+  const { signIn, error, session } = useAuth();
   const [validate, setValidate] = useState({
     isValidUsername: true,
     isValidPassword: true,
@@ -16,54 +15,58 @@ function App() {
     showHelperText: false,
     helperText: ''
   })
-  const [form, setForm] = useState({
-    username: 'o12345',
-    password: '123'
-  })
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   function recuerdame(e) { }
   async function login(e) {
     e.preventDefault();
     AlertSwal.fire({
       title: '¡Iniciando sesión!',
-      timer:3600,
+      timer: 3600,
       timerProgressBar: true,
       didOpen: async () => {
         AlertSwal.showLoading();
-        await signIn(form.username, form.password);
-        if(error){
+        await signIn(username, password);
+        if (error) {
           AlertSwal.close()
         }
       },
     }).then(result => {
-      AlertSwal.fire({
-        title: 'Lo sentimos el usuario o contraseña estan incorrectos',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      })
+      if (!session) {
+        AlertSwal.fire({
+          title: 'Lo sentimos el usuario o contraseña estan incorrectos',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        })
+      }
     })
   }
-  const Formulario = () => {
-    return (
-      <LoginForm
-        showHelperText={validate.showHelperText}
-        helperText={validate.helperText}
-        helperTextIcon={<ExclamationCircleIcon />}
-        usernameLabel="Nombre de usuario"
-        usernameValue={form.username}
-        onChangeUsername={e => setForm({ ...form, username: e })}
-        isValidUsername={validate.isValidPassword}
-        passwordLabel="Contraseña"
-        passwordValue={form.password}
-        onChangePassword={e => setForm({ ...form, password: e })}
-        isValidPassword={validate.isValidPassword}
-        rememberMeLabel="Recuerdame."
-        isRememberMeChecked={validate.isRememberMeChecked}
-        onChangeRememberMe={e => setValidate({ ...validate, isRememberMeChecked: e })}
-        onLoginButtonClick={login}
-        loginButtonLabel="Iniciar sesion"
-      ></LoginForm>
-    );
+  function handleChangeUsername(e) {
+    setUsername(e)
   }
+  function handleChangePassword(e) {
+    setPassword(e)
+  }
+  const Formulario = (
+    <LoginForm
+      showHelperText={validate.showHelperText}
+      helperText={validate.helperText}
+      helperTextIcon={<ExclamationCircleIcon />}
+      usernameLabel="Nombre de usuario"
+      usernameValue={username}
+      onChangeUsername={handleChangeUsername}
+      isValidUsername={validate.isValidUsername}
+      passwordLabel="Contraseña"
+      passwordValue={password}
+      onChangePassword={handleChangePassword}
+      isValidPassword={validate.isValidPassword}
+      rememberMeLabel="Recuerdame."
+      isRememberMeChecked={validate.isRememberMeChecked}
+      onChangeRememberMe={e => setValidate({ ...validate, isRememberMeChecked: e })}
+      onLoginButtonClick={login}
+      loginButtonLabel="Iniciar sesion"
+    />
+  );
   const forgotCredentials = (
     <LoginMainFooterBandItem>
       <a href="#">Perdiste la contraseña?</a>
@@ -83,7 +86,7 @@ function App() {
         loginSubtitle="Ingresa aqui tus credenciales"
         forgotCredentials={forgotCredentials}
       >
-        <Formulario />
+        {Formulario}
       </LoginPage>
     </>
   )

@@ -40,7 +40,6 @@ function AuthProvider({ children }) {
         try {
             const data = await authentication.login(username, password);
             if (data) {
-                console.log(data)
                 setSession(data);
                 navigate('/')
             }

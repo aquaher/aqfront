@@ -5,7 +5,6 @@ import Index from "./pages/Index";
 
 function RequiredAuth({ children }) {
     const session = useSession();
-    console.log(session)
     if (!session) return <Navigate to='/login' replace />
     return children;
 }

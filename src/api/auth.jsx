@@ -1,11 +1,20 @@
 
 import cookie from "@/service/cookie";
 import { authenticated } from "@/service/auth"
+import { instance } from '@/service/instance';
 const kaycloak = (username, password) => {
     var params = new URLSearchParams();
     params.append('username', username);
     params.append('password', password);
     params.append('grant_type', import.meta.env.VITE_GRANT_TYPE);
+    params.append('client_id', import.meta.env.VITE_CLIENT_ID);
+    params.append('client_secret', import.meta.env.VITE_SECRET_CLIENT);
+    return params;
+}
+const kaycloak_refresh = (token_refresh) => {
+    var params = new URLSearchParams();
+    params.append('refresh_token', token_refresh);
+    params.append('grant_type', import.meta.env.VITE_GRANT_TYPE_REFRESH);
     params.append('client_id', import.meta.env.VITE_CLIENT_ID);
     params.append('client_secret', import.meta.env.VITE_SECRET_CLIENT);
     return params;
@@ -28,12 +37,31 @@ const authentication = {
                 const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
                 if (userinfo) {
                     if (userinfo.status == 200) {
-                        return {
-                            ...token.data,
-                            expires_in: expires_in,
-                            refresh_expires_in: refresh_expires_in,
-                            user: {
-                                ...userinfo.data
+                        const access = await instance.get('/users_access', {
+                            params: {
+                                id: userinfo.data.sub
+                            }
+                        });
+                        if (access) {
+                            if (access.status == 200) {
+                                return {
+                                    ...token.data,
+                                    expires_in: expires_in,
+                                    refresh_expires_in: refresh_expires_in,
+                                    user: {
+                                        ...userinfo.data,
+                                        access: access.data
+                                    }
+                                }
+                            }
+                        } else {
+                            return {
+                                ...token.data,
+                                expires_in: expires_in,
+                                refresh_expires_in: refresh_expires_in,
+                                user: {
+                                    ...userinfo.data
+                                }
                             }
                         }
                     }
@@ -50,18 +78,92 @@ const authentication = {
     },
     refresh_session: async () => {
         const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN);
-        if(token){
+        if (token) {
             const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
             if (userinfo) {
                 if (userinfo.status == 200) {
-                    return {
-                        access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
-                        user: {
-                            ...userinfo.data
+                    const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
+                    if (userinfo) {
+                        if (userinfo.status == 200) {
+                            const access = await instance.get('/users_access', {
+                                params: {
+                                    id: userinfo.data.sub
+                                }
+                            });
+                            if (access) {
+                                if (access.status == 200) {
+                                    return {
+                                        access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
+                                        user: {
+                                            ...userinfo.data,
+                                            access: access.data
+                                        }
+                                    }
+                                }
+                            } else {
+                                return {
+                                    access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
+                                    user: {
+                                        ...userinfo.data
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        } else {
+            const token_refresh = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN_REFRESH);
+            if (token_refresh) {
+                const token = await authenticated.post('/protocol/openid-connect/token', kaycloak_refresh(token_refresh));
+                if (token) {
+                    if (token.status == 200) {
+                        const expires_in = Date.now() + (token.data.expires_in - 15) * 1000;
+                        const refresh_expires_in = Date.now() + (token.data.refresh_expires_in - 15) * 1000;
+                        await cookie.setCookie(import.meta.env.VITE_COOKIE_TOKEN, token.data.access_token, {
+                            'Max-Age': token.data.expires_in,
+                            secure: true
+                        })
+                        await cookie.setCookie(import.meta.env.VITE_COOKIE_TOKEN_REFRESH, token.data.refresh_token, {
+                            'Max-Age': token.data.refresh_expires_in,
+                            secure: true
+                        })
+                        const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
+                        if (userinfo) {
+                            if (userinfo.status == 200) {
+                                const access = await instance.get('/users_access', {
+                                    params: {
+                                        id: userinfo.data.sub
+                                    }
+                                });
+                                if (access) {
+                                    if (access.status == 200) {
+                                        return {
+                                            ...token.data,
+                                            expires_in: expires_in,
+                                            refresh_expires_in: refresh_expires_in,
+                                            user: {
+                                                ...userinfo.data,
+                                                access: access.data
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    return {
+                                        ...token.data,
+                                        expires_in: expires_in,
+                                        refresh_expires_in: refresh_expires_in,
+                                        user: {
+                                            ...userinfo.data
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-            }  
+            }
         }
     }
 }

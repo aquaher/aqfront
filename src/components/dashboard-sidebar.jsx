@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -12,12 +12,23 @@ import { UserAdd as UserAddIcon } from './icons/user-add';
 import { Users as UsersIcon } from './icons/users';
 import { XCircle as XCircleIcon } from './icons/x-circle';
 import { Logo } from './logo';
-import { NavItem } from './nav-item';
 import { menu } from './menu';
 import MenuItem from './MenuItem';
+import { useSession } from '@/auth/AuthProvider';
 
 export const DashboardSidebar = (props) => {
+  const session = useSession();
+  const [custom, setCustom] = useState([]);
   const { open, onClose } = props;
+
+  const access = [
+    { id: 1, path: 'm_base.m_inicio', title: 'INICIO', module: 'INICIO', icon: 'dashboard', orden: 0 },
+    { id: 2, path: 'm_base.m_produccion', title: 'PRODUCCION', module: 'PRODUCCION', icon: 'produccion', orden: 1 },
+    { id: 3, path: 'm_base.m_produccion.m_operadores', title: 'OPERADORES', module: 'PRODUCCION', icon: 'produccion', orden: 1 },
+  
+  ]
+
+
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
@@ -25,9 +36,28 @@ export const DashboardSidebar = (props) => {
 
   useEffect(
     () => {
-      /*if (!router.isReady) {
-        return;
-      }*/
+      access.map(value => {
+        const divider = value.path.split('.');
+        for (let index = 1; index < divider.length; index++) {
+          const element = custom.find(el => el.module == value.module);
+          if (!element) {
+            console.log(value)
+            setCustom([
+              ...custom,
+              {
+                icon: value.icon,
+                module: value.module,
+                title: value.title,
+                items: []
+              }
+            ])
+
+          } else {
+            
+          }
+        }
+      })
+      console.log(custom)
 
       if (open) {
         onClose?.();
@@ -116,29 +146,3 @@ DashboardSidebar.propTypes = {
   onClose: PropTypes.func,
   open: PropTypes.bool
 };
-/**
-<NextLink
-            href="https://material-kit-pro-react.devias.io/"
-            passHref
-          >
-            <Button
-              color="secondary"
-              component="a"
-              endIcon={(<OpenInNewIcon />)}
-              fullWidth
-              sx={{ mt: 2 }}
-              variant="contained"
-            >
-              Pro Live Preview
-            </Button>
-          </NextLink>
-
-          {items.map((item) => (
-            <NavItem
-              key={item.title}
-              icon={item.icon}
-              href={item.href}
-              title={item.title}
-            />
-          ))}
- */
