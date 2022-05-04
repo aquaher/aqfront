@@ -1,64 +1,111 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { ChartBar as ChartBarIcon } from './icons/chart-bar';
-import { Cog as CogIcon } from './icons/cog';
-import { Lock as LockIcon } from './icons/lock';
-import { Selector as SelectorIcon } from './icons/selector';
-import { ShoppingBag as ShoppingBagIcon } from './icons/shopping-bag';
-import { User as UserIcon } from './icons/user';
-import { UserAdd as UserAddIcon } from './icons/user-add';
-import { Users as UsersIcon } from './icons/users';
-import { XCircle as XCircleIcon } from './icons/x-circle';
 import { Logo } from './logo';
-import { menu } from './menu';
+
 import MenuItem from './MenuItem';
 import { useSession } from '@/auth/AuthProvider';
-
-export const DashboardSidebar = (props) => {
-  const session = useSession();
-  const [custom, setCustom] = useState([]);
-  const { open, onClose } = props;
-
-  const access = [
-    { id: 1, path: 'm_base.m_inicio', title: 'INICIO', module: 'INICIO', icon: 'dashboard', orden: 0 },
-    { id: 2, path: 'm_base.m_produccion', title: 'PRODUCCION', module: 'PRODUCCION', icon: 'produccion', orden: 1 },
-    { id: 3, path: 'm_base.m_produccion.m_operadores', title: 'OPERADORES', module: 'PRODUCCION', icon: 'produccion', orden: 1 },
+import { menu } from '@/service/navigation';
+const access = [
+  {
+    icon: "dashboard",
+    id: 1,
+    module: "INICIO",
+    orden: 0,
+    path: "inicio",
+    title: "INICIO",
+  },
+  {
+    icon: "produccion",
+    id: 2,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion",
+    title: "PRODUCCION",
+  },
+  {
+    icon: "trabajador",
+    id: 3,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion/operadores",
+    title: "OPERADORES",
+  },
+  {
+    icon: "prueba",
+    id: 4,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion/operadores/prueba",
+    title: "PRUEBA",
+  }
+]
+function hasChildren(item) {
   
-  ]
+  if (item.length == 1) {
+    return false;
+  }
 
+  return true;
+}
+export const DashboardSidebar = (props) => {
+  const { user } = useSession();
+  const { open, onClose } = props;
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
   });
-
+  function principal(data,item,nav) {
+    hasChildren(nav) ? multi(data.find(e=>e.icon==nav[0]),item,nav) : single(data,item);
+    
+  }
+  function single(data,item) {
+    let nuevo = {
+      name: item.module,
+      title: item.title,
+      to: `/${item.path}`,
+      icon: item.icon,
+      items: []
+    }
+    data.push(nuevo)
+  }
+  function multi(data,item,nav) {
+    nav.shift();
+    console.log('nav',nav)
+    let newvo = principal(data.items,item,nav);
+    console.log('data',data)
+    console.log('item',item)
+    
+    if (newvo){
+      let editado = {
+        name: data.module,
+        title: data.title,
+        to: `/${data.path}`,
+        icon: data.icon,
+        items: [
+          newvo
+        ]
+      }
+      data.push(editado)
+    }
+  }
   useEffect(
     () => {
-      access.map(value => {
-        const divider = value.path.split('.');
-        for (let index = 1; index < divider.length; index++) {
-          const element = custom.find(el => el.module == value.module);
-          if (!element) {
-            console.log(value)
-            setCustom([
-              ...custom,
-              {
-                icon: value.icon,
-                module: value.module,
-                title: value.title,
-                items: []
-              }
-            ])
+      try {
+        let data = []
 
-          } else {
-            
-          }
-        }
-      })
-      console.log(custom)
-
+        access.map(elemento => {
+          let index = 0;
+          let nav = elemento.path.split("/");
+          principal(data,elemento,nav);
+        })
+        console.log(data)
+      } catch (error) {
+        console.error(error)
+      }
+      
+      
       if (open) {
         onClose?.();
       }
@@ -96,7 +143,7 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {menu.map((item, key) => <MenuItem key={key} item={item}></MenuItem>)}
+
         </Box>
 
       </Box>
@@ -146,3 +193,6 @@ DashboardSidebar.propTypes = {
   onClose: PropTypes.func,
   open: PropTypes.bool
 };
+/**
+ * {user.access.map((item, key) => <MenuItem key={key} item={item}></MenuItem>)}
+ */

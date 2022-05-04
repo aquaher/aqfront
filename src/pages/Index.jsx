@@ -1,11 +1,13 @@
 import { DashboardLayout } from "@/components/dashboard-layout";
+import { Outlet } from "react-router-dom";
 
-export default function Index(){
-    return(
+export default function Index() {
+    return (
         <>
             <DashboardLayout>
-                <div>uwu</div>
+                <Outlet/>   
             </DashboardLayout>
+            
         </>
     );
 }

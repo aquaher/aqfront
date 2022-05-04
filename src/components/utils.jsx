@@ -1,6 +1,6 @@
 export function hasChildren(item) {
     const { items: children } = item;
-  
+    //console.log(children)
     if (children === undefined) {
       return false;
     }

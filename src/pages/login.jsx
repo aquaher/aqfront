@@ -6,7 +6,7 @@ import logo from '@/assets/img/g_heredia.png'
 import "@patternfly/react-core/dist/styles/base.css";
 import { useAuth } from '@/auth/AuthProvider';
 import { AlertSwal } from '@/service/sweetAlert';
-function App() {
+function Login() {
   const { signIn, error, session } = useAuth();
   const [validate, setValidate] = useState({
     isValidUsername: true,
@@ -92,4 +92,4 @@ function App() {
   )
 }
 
-export default App
+export default Login;
