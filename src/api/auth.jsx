@@ -19,6 +19,29 @@ const kaycloak_refresh = (token_refresh) => {
     params.append('client_secret', import.meta.env.VITE_SECRET_CLIENT);
     return params;
 }
+const hasChildren = (item) => {
+    if (item.length == 1) {
+      return false;
+    }
+    return true;
+  }
+const principal = (data, item, nav) =>{
+    hasChildren(nav) ? multi(data.find(e => e.icon == nav[0]), item, nav) : single(data, item);
+}
+const single = (data, item) => {
+    let nuevo = {
+        name: item.module,
+        title: item.title,
+        to: `/${item.path}`,
+        icon: item.icon,
+        items: []
+    }
+    data.push(nuevo)
+}
+function multi(data, item, nav) {
+    nav.shift();
+    principal(data.items, item, nav);
+}
 const authentication = {
     login: async (username, password) => {
         const token = await authenticated.post('/protocol/openid-connect/token', kaycloak(username, password));
@@ -44,13 +67,19 @@ const authentication = {
                         });
                         if (access) {
                             if (access.status == 200) {
+                                /**Arreglar menu solo ordenado */
+                                let data = []
+                                access.data.map(elemento => {
+                                    let nav = elemento.path.split("/");
+                                    principal(data, elemento, nav);
+                                })
                                 return {
                                     ...token.data,
                                     expires_in: expires_in,
                                     refresh_expires_in: refresh_expires_in,
                                     user: {
                                         ...userinfo.data,
-                                        access: access.data
+                                        access: data
                                     }
                                 }
                             }
@@ -92,11 +121,17 @@ const authentication = {
                             });
                             if (access) {
                                 if (access.status == 200) {
+                                    /**Arreglar menu solo ordenado */
+                                    let data = []
+                                    access.data.map(elemento => {
+                                        let nav = elemento.path.split("/");
+                                        principal(data, elemento, nav);
+                                    })
                                     return {
                                         access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
                                         user: {
                                             ...userinfo.data,
-                                            access: access.data
+                                            access: data
                                         }
                                     }
                                 }
@@ -139,13 +174,18 @@ const authentication = {
                                 });
                                 if (access) {
                                     if (access.status == 200) {
+                                        let data = []
+                                        access.data.map(elemento => {
+                                            let nav = elemento.path.split("/");
+                                            principal(data, elemento, nav);
+                                        })
                                         return {
                                             ...token.data,
                                             expires_in: expires_in,
                                             refresh_expires_in: refresh_expires_in,
                                             user: {
                                                 ...userinfo.data,
-                                                access: access.data
+                                                access: data
                                             }
                                         }
                                     }

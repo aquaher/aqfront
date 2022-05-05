@@ -34,7 +34,7 @@ function Login() {
     }).then(result => {
       if (!session) {
         AlertSwal.fire({
-          title: 'Lo sentimos el usuario o contraseña estan incorrectos',
+          title: 'Lo Ocurrio un error',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         })

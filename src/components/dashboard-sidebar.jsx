@@ -6,48 +6,7 @@ import { Logo } from './logo';
 import MenuItem from './MenuItem';
 import { useSession } from '@/auth/AuthProvider';
 import { menu } from '@/service/navigation';
-const access = [
-  {
-    icon: "dashboard",
-    id: 1,
-    module: "INICIO",
-    orden: 0,
-    path: "inicio",
-    title: "INICIO",
-  },
-  {
-    icon: "produccion",
-    id: 2,
-    module: "PRODUCCION",
-    orden: 1,
-    path: "produccion",
-    title: "PRODUCCION",
-  },
-  {
-    icon: "trabajador",
-    id: 3,
-    module: "PRODUCCION",
-    orden: 1,
-    path: "produccion/operadores",
-    title: "OPERADORES",
-  },
-  {
-    icon: "prueba",
-    id: 4,
-    module: "PRODUCCION",
-    orden: 1,
-    path: "produccion/operadores/prueba",
-    title: "PRUEBA",
-  }
-]
-function hasChildren(item) {
-  
-  if (item.length == 1) {
-    return false;
-  }
 
-  return true;
-}
 export const DashboardSidebar = (props) => {
   const { user } = useSession();
   const { open, onClose } = props;
@@ -56,56 +15,10 @@ export const DashboardSidebar = (props) => {
     defaultMatches: true,
     noSsr: false
   });
-  function principal(data,item,nav) {
-    hasChildren(nav) ? multi(data.find(e=>e.icon==nav[0]),item,nav) : single(data,item);
-    
-  }
-  function single(data,item) {
-    let nuevo = {
-      name: item.module,
-      title: item.title,
-      to: `/${item.path}`,
-      icon: item.icon,
-      items: []
-    }
-    data.push(nuevo)
-  }
-  function multi(data,item,nav) {
-    nav.shift();
-    console.log('nav',nav)
-    let newvo = principal(data.items,item,nav);
-    console.log('data',data)
-    console.log('item',item)
-    
-    if (newvo){
-      let editado = {
-        name: data.module,
-        title: data.title,
-        to: `/${data.path}`,
-        icon: data.icon,
-        items: [
-          newvo
-        ]
-      }
-      data.push(editado)
-    }
-  }
+
   useEffect(
     () => {
-      try {
-        let data = []
 
-        access.map(elemento => {
-          let index = 0;
-          let nav = elemento.path.split("/");
-          principal(data,elemento,nav);
-        })
-        console.log(data)
-      } catch (error) {
-        console.error(error)
-      }
-      
-      
       if (open) {
         onClose?.();
       }
@@ -143,7 +56,7 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-
+          {user.access.map((item, key) => <MenuItem key={key} item={item}></MenuItem>)}
         </Box>
 
       </Box>
@@ -196,3 +109,63 @@ DashboardSidebar.propTypes = {
 /**
  * {user.access.map((item, key) => <MenuItem key={key} item={item}></MenuItem>)}
  */
+/*
+const access = [
+  {
+    icon: "dashboard",
+    id: 1,
+    module: "INICIO",
+    orden: 0,
+    path: "inicio",
+    title: "INICIO",
+  },
+  {
+    icon: "produccion",
+    id: 2,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion",
+    title: "PRODUCCION",
+  },
+  {
+    icon: "operador",
+    id: 3,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion/operador",
+    title: "OPERADOR",
+  },
+  {
+    icon: "p2",
+    id: 3,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion/operador/p2",
+    title: "P2",
+  },
+  {
+    icon: "prueba",
+    id: 5,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion/prueba",
+    title: "PRUEBA",
+  },
+  {
+    icon: "child",
+    id: 6,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion/prueba/child",
+    title: "CHILD",
+  },
+  {
+    icon: "cuatro",
+    id: 4,
+    module: "PRODUCCION",
+    orden: 1,
+    path: "produccion/prueba/cuatro",
+    title: "CUATRO",
+  },
+]
+*/

@@ -1,37 +1,34 @@
-import { Dashboard, Factory, SupervisedUserCircle } from "@mui/icons-material";
-import Index from "@/pages/Index";
-import Prueba from "@/pages/users/prueba";
+import { Dashboard, Factory, SupervisedUserCircle, Water, WaterDamage, WaterfallChart } from "@mui/icons-material";
 import { Trabajador } from "@/components/icons/trabajajdor";
 
 
 export const menu = [
     {
-        name:'dashboard',
-        title:'INICIO',
-        to:'inicio',
+        name:'inicio',
         icon:<Dashboard/>,
-        items: []
     },
     {
         name:'usaurios',
-        title:'USUARIOS',
-        to:'usuario',
-        icon:<Dashboard/>,
-        items: []
+        icon:<Dashboard/>
     },
     {
         name:'produccion',
-        title:'PRODUCCION',
         icon:<Factory/>,
-        to:'/produccion',
-        items: [
-            {
-                name:'operador',
-                title:'INICIO',
-                icon:<Dashboard/>,
-                to:'produccion/opearador',
-                items: []
-            }
-        ]
+    },
+    {
+        name:'operadores',
+        icon: <Trabajador/>,
+    },
+    {
+        name:'purificada',
+        icon: <Water/>,
+    },
+    {
+        name:'ultrafiltrada',
+        icon: <WaterfallChart/>,
+    },
+    {
+        name:'generica',
+        icon: <WaterDamage/>,
     }
 ]
