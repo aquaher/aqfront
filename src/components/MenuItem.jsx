@@ -28,7 +28,6 @@ function MultiLevel({item}){
     function handleClick(e){
         setOpen(!open)
     }
-    console.log(item)
     return(
         <>
         <ListItem button onClick={handleClick}>

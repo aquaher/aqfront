@@ -1,11 +1,12 @@
-import { DashboardLayout } from "@/components/dashboard-layout";
-import { Outlet, useLocation } from "react-router-dom";
+import { useSession } from "@/auth/AuthProvider";
+import CoIndex from "@/components/operador";
 
 export default function Index() {
-    const location = useLocation();
+    const {user} = useSession();
     return (
         <>
             Inicio
+            {user.group=='/operador'?<CoIndex/>:null}
         </>
     );
 }

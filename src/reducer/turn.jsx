@@ -1,29 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const turnSlice = createSlice({
-    name:'turn',
-    initialState:{
-        id:0,
-        turn:0,
-        operador:'',
-        start_date:'',
-        end_date:''
+    name: 'turn',
+    initialState: {
+        loading: true,
+        error: false,
+        turn: {
+            id: 0,
+            turn: 0,
+            operador: '',
+            start_date: '',
+            end_date: ''
+        },
+        messaje: null
     },
-    reducers:{
-        addTurn:(state,{payload})=>{
-            state.id = payload.id;
-            state.turn = payload.turn
-            state.operador = payload.operador
-            state.start_date = payload.start_date
-            state.end_date = payload.end_date
-        }
+    reducers: {
+        setTurn: (state, { payload }) => {
+            state.loading = false;
+            state.turn.id = payload.id;
+            state.turn.turn = payload.turn;
+            state.turn.operador = payload.operador;
+            state.turn.start_date = payload.start_date;
+            state.turn.end_date = payload.end_date;
+            state.messaje = payload.messaje;
+        },
+        setTurnError: (state) => {
+            state.error = true;
+            state.loading = false;
+        },
     }
 });
-export const {addTurn} = turnSlice.actions;
-export const addTurnAsyn = (turn) => (dispatch) => {
-    setTimeout(()=>{
-        dispatch(addTurn(turn))
-    },3000)
-} 
+export const { setTurn,setTurnError } = turnSlice.actions;
+export const setTurnAsyn = (turn) => (dispatch) => {
+    setTimeout(() => {
+        dispatch(setTurn(turn))
+    }, 3000)
+}
 export const selectTurn = (state) => state.turn;
 export default turnSlice.reducer;

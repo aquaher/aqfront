@@ -19,6 +19,8 @@ const kaycloak_refresh = (token_refresh) => {
     params.append('client_secret', import.meta.env.VITE_SECRET_CLIENT);
     return params;
 }
+/*
+LO PASE 
 const hasChildren = (item) => {
     if (item.length == 1) {
       return false;
@@ -41,7 +43,7 @@ const single = (data, item) => {
 function multi(data, item, nav) {
     nav.shift();
     principal(data.items, item, nav);
-}
+}*/
 const authentication = {
     login: async (username, password) => {
         const token = await authenticated.post('/protocol/openid-connect/token', kaycloak(username, password));
@@ -69,17 +71,19 @@ const authentication = {
                             if (access.status == 200) {
                                 /**Arreglar menu solo ordenado */
                                 let data = []
+                                /*
+                                LO PASE AL BACKEND
                                 access.data.map(elemento => {
                                     let nav = elemento.path.split("/");
                                     principal(data, elemento, nav);
-                                })
+                                })*/
                                 return {
                                     ...token.data,
                                     expires_in: expires_in,
                                     refresh_expires_in: refresh_expires_in,
                                     user: {
                                         ...userinfo.data,
-                                        access: data
+                                        access: access.data
                                     }
                                 }
                             }
@@ -122,16 +126,16 @@ const authentication = {
                             if (access) {
                                 if (access.status == 200) {
                                     /**Arreglar menu solo ordenado */
-                                    let data = []
+                                    /*let data = []
                                     access.data.map(elemento => {
                                         let nav = elemento.path.split("/");
                                         principal(data, elemento, nav);
-                                    })
+                                    })*/
                                     return {
                                         access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
                                         user: {
                                             ...userinfo.data,
-                                            access: data
+                                            access: access.data
                                         }
                                     }
                                 }
@@ -174,18 +178,18 @@ const authentication = {
                                 });
                                 if (access) {
                                     if (access.status == 200) {
-                                        let data = []
+                                        /*let data = []
                                         access.data.map(elemento => {
                                             let nav = elemento.path.split("/");
                                             principal(data, elemento, nav);
-                                        })
+                                        })*/
                                         return {
                                             ...token.data,
                                             expires_in: expires_in,
                                             refresh_expires_in: refresh_expires_in,
                                             user: {
                                                 ...userinfo.data,
-                                                access: data
+                                                access: access.data
                                             }
                                         }
                                     }
