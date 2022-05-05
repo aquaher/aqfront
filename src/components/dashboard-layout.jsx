@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
+import { Outlet } from 'react-router-dom';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -14,8 +15,8 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   }
 }));
 
-export const DashboardLayout = (props) => {
-  const { children } = props;
+export const DashboardLayout = () => {
+  //const { children } = props;
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   return (
@@ -29,7 +30,7 @@ export const DashboardLayout = (props) => {
             width: '100%'
           }}
         >
-          {children}
+          <Outlet/>
         </Box>
       </DashboardLayoutRoot>
       <DashboardNavbar onSidebarOpen={() => setSidebarOpen(true)} />
@@ -40,3 +41,5 @@ export const DashboardLayout = (props) => {
     </>
   );
 };
+//DashboardLayout = (props)
+//en outled iba {children}

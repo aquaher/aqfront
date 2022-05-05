@@ -3,17 +3,22 @@ import { ListItem, ListItemIcon, ListItemText, Collapse, List } from "@mui/mater
 import { useState } from "react";
 import { menu } from "@/service/navigation";
 import { hasChildren } from "./utils";
+import { Link, useNavigate, useRoutes } from "react-router-dom";
 
 export default function MenuItem({item}){
     const Menu = hasChildren(item)? MultiLevel:SingleLevel;
+    
     return <Menu item={item}/>
 }
 function SingleLevel({item}){
+    const el =menu.find(e=>e.name==item.icon);
     return(
+        <Link to={item.to} style={{ display: "block", textDecoration: "none",color:'white' }}>
         <ListItem button>
-            <ListItemIcon>{menu.find(e=>e.name==item.icon).icon}</ListItemIcon>
+            <ListItemIcon>{el.icon}</ListItemIcon>
             <ListItemText>{item.title}</ListItemText>
         </ListItem>
+        </Link>
     );
 }
 function MultiLevel({item}){
@@ -23,6 +28,7 @@ function MultiLevel({item}){
     function handleClick(e){
         setOpen(!open)
     }
+    console.log(item)
     return(
         <>
         <ListItem button onClick={handleClick}>
