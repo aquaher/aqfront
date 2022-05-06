@@ -22,23 +22,12 @@ function Login() {
     e.preventDefault();
     AlertSwal.fire({
       title: '¡Iniciando sesión!',
-      timer: 3600,
       timerProgressBar: true,
       didOpen: async () => {
         AlertSwal.showLoading();
         await signIn(username, password);
-        if (error) {
           AlertSwal.close()
-        }
       },
-    }).then(result => {
-      if (!session) {
-        AlertSwal.fire({
-          title: 'Lo Ocurrio un error',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        })
-      }
     })
   }
   function handleChangeUsername(e) {
