@@ -1,4 +1,4 @@
-import { Dashboard, Factory, SupervisedUserCircle, Water, WaterDamage, WaterfallChart } from "@mui/icons-material";
+import { AppRegistration, Dashboard, EnergySavingsLeaf, Factory, SupervisedUserCircle, Water, WaterDamage, WaterfallChart } from "@mui/icons-material";
 import { Trabajador } from "@/components/icons/trabajajdor";
 
 
@@ -24,6 +24,14 @@ export const menu = [
 
     },
     {
+        name:'bitacora',
+        icon:<AppRegistration/>,
+    },
+    {
+        name:'medidor',
+        icon: <EnergySavingsLeaf/>,
+    },
+    {
         name:'purificada',
         icon: <Water/>,
 
@@ -36,6 +44,5 @@ export const menu = [
     {
         name:'generica',
         icon: <WaterDamage/>,
-
     }
 ]

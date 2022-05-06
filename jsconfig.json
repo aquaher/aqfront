@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-      "baseUrl": ".",
-      "paths": {
-        "@/components/*": ["./src/components/*"],
-        "@/store/*": ["./src/store/*"],
-        "@/reducer/*": ["./src/reducer/*"],
-        "@/assets/*": ["./src/assets/*"],
-        "@/service/*": ["./src/service/*"],
-        "@/api/*": ["./src/api/*"],
-        "@/auth/*": ["./src/auth/*"],
-        "@/pages/*": ["./src/pages/*"]
-      }
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["./src/components/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/reducer/*": ["./src/reducer/*"],
+      "@/assets/*": ["./src/assets/*"],
+      "@/service/*": ["./src/service/*"],
+      "@/api/*": ["./src/api/*"],
+      "@/auth/*": ["./src/auth/*"],
+      "@/pages/*": ["./src/pages/*"]
     }
   }
+}
