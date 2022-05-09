@@ -1,5 +1,4 @@
 import { verifyTurnByUser } from "@/api/turn";
-import getTank  from "@/api/tank";
 import { getUserByOperator, registerOperator } from "@/api/user";
 import { useSession } from "@/auth/AuthProvider";
 import { selectTurn, setTurn } from "@/reducer/turn";
@@ -19,7 +18,6 @@ export default function CoIndex() {
             setOperarios(await getUserByOperator())
         })()
         dispatch(verifyTurnByUser());
-        dispatch(getTank())
         dispatch(getEvents())
     }, [dispatch])
     return (

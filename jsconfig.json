@@ -9,7 +9,8 @@
       "@/service/*": ["./src/service/*"],
       "@/api/*": ["./src/api/*"],
       "@/auth/*": ["./src/auth/*"],
-      "@/pages/*": ["./src/pages/*"]
+      "@/pages/*": ["./src/pages/*"],
+      "@/constant/*": ["./src/constant/*"]
     }
   }
 }

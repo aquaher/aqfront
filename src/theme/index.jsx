@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material';
-
+import { esES } from '@mui/x-data-grid';
 export const themeMaterial = createTheme({
+  
   breakpoints: {
     values: {
       xs: 0,
@@ -296,4 +297,4 @@ export const themeMaterial = createTheme({
       lineHeight: 1.375
     }
   }
-});
+},esES);

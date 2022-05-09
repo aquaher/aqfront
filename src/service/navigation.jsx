@@ -1,5 +1,7 @@
-import { AppRegistration, Dashboard, EnergySavingsLeaf, Factory, SupervisedUserCircle, Water, WaterDamage, WaterfallChart } from "@mui/icons-material";
+import { AppRegistration, Dashboard, EnergySavingsLeaf, Factory, SupervisedUserCircle, TurnedIn, Water, WaterDamage, WaterfallChart, WaterfallChartRounded } from "@mui/icons-material";
 import { Trabajador } from "@/components/icons/trabajajdor";
+import { ChartAreasPline } from "@/components/icons/chart_areaspline";
+import { WaterCircle } from "@/components/icons/water_cricle";
 
 
 export const menu = [
@@ -44,5 +46,17 @@ export const menu = [
     {
         name:'generica',
         icon: <WaterDamage/>,
+    },
+    {
+        name:'informe',
+        icon: <ChartAreasPline/>,
+    },
+    {
+        name:'turno',
+        icon: <TurnedIn/>,
+    },
+    {
+        name:'volumen',
+        icon: <WaterfallChartRounded/>,
     }
 ]

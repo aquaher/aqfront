@@ -1,11 +1,10 @@
-import { getVerifyWaterByTurn, setRegisterWater } from "@/api/water";
+import { getVerifyWaterByTurn, putRegisterWater, setRegisterWater } from "@/api/water";
 import { AlertSwal } from "@/service/sweetAlert";
 import { Button, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 
 export default function Hwater({ tanque, turn }) {
-    const [loadVerify,setLoadVerify] = useState(true)
-    const [data, setData] = useState({
+    const model = {
         start_vol: 0,
         end_vol: 0,
         dispatch: 0,
@@ -13,7 +12,10 @@ export default function Hwater({ tanque, turn }) {
         total_produced: 0,
         tank: tanque,
         turn: turn
-    });
+    };
+    const [loadVerify, setLoadVerify] = useState(true)
+    const [edit, setEdit] = useState(false);
+    const [data, setData] = useState({...model});
     const total_produced = useMemo(() =>
         parseInt(data.start_vol) - parseInt(data.end_vol) + parseInt(data.dispatch)
         , [
@@ -22,17 +24,24 @@ export default function Hwater({ tanque, turn }) {
             data.dispatch
         ])
     useEffect(() => {
+        
         (async () => {
+            setData({...model})
+            
             const res = await getVerifyWaterByTurn({ tank_id: tanque.id, turn_id: turn.id })
             setLoadVerify(false);
-            setData({
-                start_vol: res.start_vol || 0,
-                end_vol: res.end_vol || 0,
-                dispatch: res.dispatch || 0,
-                backwash: res.backwash || 0,
-                tank: tanque,
-                turn: turn
-            });            
+            if(res){
+                setEdit(true);
+                setData({
+                    start_vol: res.start_vol ,
+                    end_vol: res.end_vol ,
+                    dispatch: res.dispatch ,
+                    backwash: res.backwash ,
+                });
+            }else{
+                setEdit(false);
+            }
+            
         })()
 
     }, [tanque.name]);
@@ -48,7 +57,16 @@ export default function Hwater({ tanque, turn }) {
                 icon: 'question',
                 preConfirm: async () => {
                     try {
-                        await setRegisterWater({ ...data, total_produced: total_produced });
+                        let res = null;
+                        if(!edit){
+                            console.log('regis')
+                            res = await setRegisterWater({ ...data, total_produced: total_produced });
+                        }else{
+                            console.log('edit')
+                            res = await putRegisterWater({ ...data, total_produced: total_produced });
+                        }
+                        setEdit(true);
+                        setData({...res})
                     } catch (error) {
                         AlertSwal.showValidationMessage('Lo sentimos ocurrio un error');
                     }
@@ -70,9 +88,9 @@ export default function Hwater({ tanque, turn }) {
         }
 
     }
-    if(loadVerify) return <Skeleton/>;
+    if (loadVerify) return <Skeleton />;
     return (
-        <Stack pt={2} pb={2} spacing={1}>
+        <Stack pt={2} pb={2} spacing={2}>
             <Typography fontWeight='bold'>Volumen inicial</Typography>
             <TextField variant="outlined" value={data.start_vol} onChange={e => setData({ ...data, start_vol: e.target.value })} type='number'></TextField>
             <Typography fontWeight='bold'>Volumen final</Typography>
@@ -86,7 +104,9 @@ export default function Hwater({ tanque, turn }) {
             <Typography fontWeight='bold'>Produccion</Typography>
             <TextField variant="outlined" value={total_produced}></TextField>
             <Stack alignItems='center'>
-                <Button variant='contained' color="primary" onClick={setRegistro} disabled={data.start_vol!=0}>Guardar</Button>
+                {!edit ?
+                    <Button variant='contained' color="primary" onClick={setRegistro}>Guadar</Button> :
+                    <Button variant='contained' color='secondary' onClick={setRegistro}>Editar</Button>}
             </Stack>
         </Stack>
     );
