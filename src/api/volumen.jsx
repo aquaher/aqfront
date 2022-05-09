@@ -10,8 +10,13 @@ async function setRegisterVolumen(volumen){
     return data;
 }
 
-async function putVolumenById({vol_id,vol}){
-    const {data} = await instance.put(path,{params:{id:vol_id,vol:vol}});
+async function putVolumenById(volumen){
+    const {data} = await instance.put(path,volumen);
+    return data;
+}
+
+async function getVolumenByTurnAndTank({turn_id,tank_id}){
+    const {data} = await instance.get(path+'/vol',{params:{turn:turn_id,tank:tank_id}});
     return data;
 }
 
@@ -24,5 +29,6 @@ export {
     getVolumenById,
     setRegisterVolumen,
     putVolumenById,
+    getVolumenByTurnAndTank,
     getVolumensByMonthAndTurn
 }

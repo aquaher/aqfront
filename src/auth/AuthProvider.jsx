@@ -51,8 +51,14 @@ function AuthProvider({ children }) {
         }
 
     }
-    async function signOut() {
-        authentication.logout().then(() => setSession(undefined));
+    async function signOut(sub) {
+        try {
+            const data = await authentication.logout({sub:sub});
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
     const value = useMemo(() => ({

@@ -2,6 +2,13 @@
 import cookie from "@/service/cookie";
 import { authenticated } from "@/service/auth"
 import { instance } from '@/service/instance';
+const kaycloak_logout = () => {
+    var params = new URLSearchParams();
+    params.append('grant_type', import.meta.env.VITE_GRANT_TYPE);
+    params.append('client_id', import.meta.env.VITE_CLIENT_ID);
+    params.append('client_secret', import.meta.env.VITE_SECRET_CLIENT);
+    return params;
+}
 const kaycloak = (username, password) => {
     var params = new URLSearchParams();
     params.append('username', username);
@@ -102,12 +109,12 @@ const authentication = {
             }
         }
     },
-    logout: async () => {
-        /*
-        http://127.0.0.1:8180/auth/admin/realms/heroes/users/83c72e88-7ac9-4fc7-a7fb-97736d67d261/logout
-        post
-        and token bearer
-        */
+    logout: async ({sub}) => {
+        const logout = await authenticated.post(`/users/${sub}/logout`,kaycloak_logout())
+        await cookie.deleteCookie(import.meta.env.VITE_COOKIE_TOKEN)
+        await cookie.deleteCookie(import.meta.env.VITE_COOKIE_TOKEN_REFRESH)
+        console.log('logout',logout)
+        return logout;
     },
     refresh_session: async () => {
         const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN);

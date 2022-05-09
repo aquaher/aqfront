@@ -92,17 +92,17 @@ export default function Hwater({ tanque, turn }) {
     return (
         <Stack pt={2} pb={2} spacing={2}>
             <Typography fontWeight='bold'>Volumen inicial</Typography>
-            <TextField variant="outlined" value={data.start_vol} onChange={e => setData({ ...data, start_vol: e.target.value })} type='number'></TextField>
+            <TextField variant="outlined" value={data.start_vol||0} onChange={e => setData({ ...data, start_vol: e.target.value })} type='number'></TextField>
             <Typography fontWeight='bold'>Volumen final</Typography>
-            <TextField variant="outlined" value={data.end_vol} onChange={e => setData({ ...data, end_vol: e.target.value })} type='number'></TextField>
+            <TextField variant="outlined" value={data.end_vol||0} onChange={e => setData({ ...data, end_vol: e.target.value })} type='number'></TextField>
             <Typography fontWeight='bold'>Despacho</Typography>
-            <TextField variant="outlined" value={data.dispatch} onChange={e => setData({ ...data, dispatch: e.target.value })} type='number'></TextField>
+            <TextField variant="outlined" value={data.dispatch||0} onChange={e => setData({ ...data, dispatch: e.target.value })} type='number'></TextField>
             {tanque.water != 'AGUA PURIFICADA' ? <>
                 <Typography fontWeight='bold'>Retrolavado</Typography>
-                <TextField variant="outlined" value={data.backwash} onChange={e => setData({ ...data, backwash: e.target.value })} type='number'></TextField>
+                <TextField variant="outlined" value={data.backwash||0} onChange={e => setData({ ...data, backwash: e.target.value })} type='number'></TextField>
             </> : null}
             <Typography fontWeight='bold'>Produccion</Typography>
-            <TextField variant="outlined" value={total_produced}></TextField>
+            <TextField disabled variant="outlined" value={total_produced}></TextField>
             <Stack alignItems='center'>
                 {!edit ?
                     <Button variant='contained' color="primary" onClick={setRegistro}>Guadar</Button> :

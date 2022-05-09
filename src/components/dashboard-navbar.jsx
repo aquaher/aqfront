@@ -8,7 +8,8 @@ import { UserCircle as UserCircleIcon } from './icons/user-circle';
 import { Users as UsersIcon } from './icons/users';
 import { useState } from 'react';
 import { LogoutOutlined } from '@mui/icons-material';
-import { useSession } from '@/auth/AuthProvider';
+import { useSession,useAuth } from '@/auth/AuthProvider';
+
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -17,14 +18,18 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
 
 export const DashboardNavbar = (props) => {
   const session = useSession();
+  const {signOut} = useAuth();
+
   const { onSidebarOpen, ...other } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose =async () => {
     setAnchorEl(null);
+    console.log(session)
+    await signOut(session.user.sub);
   };
 
   return (

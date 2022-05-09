@@ -36,19 +36,25 @@ export default function Pibitacora() {
     const [isLoad, setLoad] = useState(true);
     useEffect(() => {
         (async () => {
-            const res = await getRegisterBitacoraByMonth({number:now.getMonth() + 1});
-            setLoad(false)
-            if (res) {
-                setData(res)
+            try {
+                const res = await getRegisterBitacoraByMonth({ number: now.getMonth() + 1 });
+                setLoad(false)
+                if (res) {
+                    setData(res)
+                }
+            } catch (error) {
+                setData([])
+                setLoad(false)
             }
+
         })()
     }, []);
 
     async function reloadData() {
         setLoad(true)
         try {
-            const res = await getRegisterBitacoraByMonth({number:months.findIndex(e => e == date) + 1})
-            
+            const res = await getRegisterBitacoraByMonth({ number: months.findIndex(e => e == date) + 1 })
+
             if (res) {
                 setData(res);
             }
