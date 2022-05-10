@@ -7,12 +7,15 @@ import { themeMaterial } from './theme';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
 import { Navigation } from './router';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import 'sweetalert2/dist/sweetalert2.css'
 import '@/assets/global.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-      <ThemeProvider theme={themeMaterial}>
+    <ThemeProvider theme={themeMaterial}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Provider store={store}>
           <BrowserRouter>
             <AuthProvider>
@@ -20,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             </AuthProvider>
           </BrowserRouter>
         </Provider>
-      </ThemeProvider>
+      </LocalizationProvider>
+    </ThemeProvider>
   </React.StrictMode>
 )

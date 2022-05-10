@@ -13,6 +13,8 @@ import Pibitacora from "./pages/modules/produccion/informe/bitacora";
 import PiMedidor from "./pages/modules/produccion/informe/medidor";
 import PiVolumen from "./pages/modules/produccion/informe/volumen";
 import PoVolumen from "./pages/modules/produccion/operador/volumen";
+import PcIndex from "./pages/modules/produccion/control_calidad";
+import Pcparametros from "./pages/modules/produccion/control_calidad/parametros";
 
 
 function RequiredAuth({ children }) {
@@ -32,6 +34,9 @@ export function Navigation() {
             }>
                 <Route path="" element={<Index />} />
                 <Route path="produccion" element={<PIndex />}>
+                    <Route path="control_calidad" element={<PcIndex/>}>
+                        <Route path="agua" element={<Pcparametros/>}/>
+                    </Route>
                     <Route path="operadores" element={<PoIndex />} >
                         <Route path=":water" element={<Powater />} />
                         <Route path="volumen" element={<PoVolumen />} />

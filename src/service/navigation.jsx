@@ -1,4 +1,4 @@
-import { AppRegistration, Dashboard, EnergySavingsLeaf, Factory, SupervisedUserCircle, TurnedIn, Water, WaterDamage, WaterfallChart, WaterfallChartRounded } from "@mui/icons-material";
+import { AppRegistration, Dashboard, EnergySavingsLeaf, EngineeringOutlined, Factory, GppGood, SupervisedUserCircle, TurnedIn, Water, WaterDamage, WaterfallChart, WaterfallChartRounded, WaterOutlined } from "@mui/icons-material";
 import { Trabajador } from "@/components/icons/trabajajdor";
 import { ChartAreasPline } from "@/components/icons/chart_areaspline";
 import { WaterCircle } from "@/components/icons/water_cricle";
@@ -17,7 +17,7 @@ export const menu = [
     },
     {
         name:'produccion',
-        icon:<Factory/>,
+        icon:<EngineeringOutlined/>,
  
     },
     {
@@ -58,5 +58,13 @@ export const menu = [
     {
         name:'volumen',
         icon: <WaterfallChartRounded/>,
+    },
+    {
+        name:'control_calidad',
+        icon: <GppGood/>,
+    },
+    {
+        name:'agua',
+        icon: <WaterOutlined/>,
     }
 ]
