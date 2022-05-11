@@ -17,8 +17,7 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
 }));
 
 export const DashboardNavbar = (props) => {
-  const session = useSession();
-  const {signOut} = useAuth();
+  const {signOut,session} = useAuth();
 
   const { onSidebarOpen, ...other } = props;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,8 +27,7 @@ export const DashboardNavbar = (props) => {
   };
   const handleClose =async () => {
     setAnchorEl(null);
-    console.log(session)
-    await signOut(session.user.sub);
+    await signOut();
   };
 
   return (

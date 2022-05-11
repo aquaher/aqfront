@@ -8,6 +8,8 @@ import { Box, Button, MenuItem, Paper, Select, Stack, Table, TableBody, TableCel
 import { DataGrid, GridActionsCellItem, GridToolbar, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { HexColorPicker } from "react-colorful";
+import { AlertSwal } from "@/service/sweetAlert";
 
 const turn = [1, 2, 3]
 const columns = [
@@ -21,46 +23,117 @@ export default function PiVolumen() {
     const now = new Date();
     const [turno, setTurno] = useState(turn[0]);
     const [date, setDate] = useState(months[now.getMonth()]);
-    const [data, setData] = useState();
-    const [isLoad, setIsLoad] = useState(true);
+    const [data, setData] = useState([]);
+    const [isLoad, setIsLoad] = useState(false);
     const [selectionModel, setSelectionModel] = useState([]);
     const { value } = useSelector(selectTank);
-    const [selecTank, setSelectTank] = useState(value[0].name);
-    const [graficaData, setGraficaData] = useState();
+    const [selecTank, setSelectTank] = useState('TQ-1');
+    const [graficaData, setGraficaData] = useState([]);
     const [selectTypoGrafica, setTypoGrafica] = useState(typo_grafica[0]);
-    useEffect(() => {
-        (async () => {
-            const res = await getVolumensByMonthAndTurn({ month: now.getMonth() + 1, turn: turno, tank_name: selecTank })
-            setIsLoad(false);
-            if (res) {
-                setData(res)
-            }
-        })()
-    }, []);
+    const [color, setColor] = useState("#aabbcc");
+
     async function reloadData(e) {
+        
         try {
             setIsLoad(true);
-            const res = await getVolumensByMonthAndTurn({ month: months.findIndex(e => e == date)+1, turn: turno, tank_name: selecTank })
-            setIsLoad(false);
-            if (res) {
-                console.log(res)
-                const labels = res.map(e => `${new Date(e.turn.start_date).toLocaleDateString()}`);
-                setGraficaData({
-                    labels,
-                    datasets: [
-                        {
-                            label: res[0].tank.water,
-                            data: res.map((e) => e.vol),
-                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                        }
-                    ],
-                })
-                setData(res)
+            if (graficaData.length == 0) {
+                AlertSwal.fire({
+                    title: `¿Estas seguro que deseas cargar los volumenes de ${selecTank}?`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Aceptar',
+                    showLoaderOnConfirm: true,
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                    icon: 'question',
+                    preConfirm: async () => {
+                        const res = await getVolumensByMonthAndTurn({ month: months.findIndex(e => e == date) + 1, turn: turno, tank_name: selecTank })
+                        if (res.length != 0) {
+                            const labels = res.map(e => `${new Date(e.turn.start_date).toLocaleDateString()}`);
+                            setData(res)
+                            setGraficaData({
+                                labels,
+                                datasets: [
+                                    {
+                                        label: `${res[0].tank.name} ${res[0].tank.water}`,
+                                        data: res.map((e) => e.vol),
+                                        backgroundColor: color,
+                                    }
+                                ],
+                            })
 
+                        } else {
+                            AlertSwal.fire({
+                                title: `¡Lo sentimos, no existen registros en este mes !`,
+                                icon: 'info',
+                            })
+                        }
+                    },
+                    allowOutsideClick: () => !AlertSwal.isLoading()
+                })
+            } else {
+                if(turno==data[0].turn.turn){
+                    AlertSwal.fire({
+                        title: `¿Estas seguro que deseas añadir los volumenes de ${selecTank}?`,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Aceptar',
+                        showLoaderOnConfirm: true,
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancelar',
+                        icon: 'question',
+                        preConfirm: async () => {
+                            const res = await getVolumensByMonthAndTurn({ month: months.findIndex(e => e == date) + 1, turn: turno, tank_name: selecTank })
+                            if (res.length != 0) {
+                                const labels = res.map(e => `${new Date(e.turn.start_date).toLocaleDateString()}`);
+                                setData([...data, ...res])
+                                setGraficaData({
+                                    labels,
+                                    datasets: [
+                                        ...graficaData.datasets,
+                                        {
+                                            label: `${res[0].tank.name} ${res[0].tank.water}`,
+                                            data: res.map((e) => e.vol),
+                                            backgroundColor: color,
+                                        }
+                                    ],
+                                })
+    
+                            } else {
+                                AlertSwal.fire({
+                                    title: `¡Lo sentimos, no existen registros!`,
+                                    icon: 'info',
+                                })
+                            }
+                        },
+                        allowOutsideClick: () => !AlertSwal.isLoading()
+                    })
+                }else{
+                    AlertSwal.fire({
+                        title: `Estas a punto de cargar la información del turno ${turno},¿Deseas continuar?`,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Aceptar',
+                        showLoaderOnConfirm: true,
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancelar',
+                        icon: 'question',
+                        preConfirm: async () => {
+                            setData([])
+                            setGraficaData([])
+                        },
+                        allowOutsideClick: () => !AlertSwal.isLoading()
+                    }).then(co=>{
+                        if(co.isConfirmed){
+                            AlertSwal.fire({
+                                title: `¡Todo esta listo para cargues los datos!`,
+                                icon: 'info',
+                            })
+                        }
+                    })
+                } 
             }
         } catch (error) {
-            setIsLoad(false);
+
         }
+        setIsLoad(false);
 
     }
 
@@ -91,11 +164,19 @@ export default function PiVolumen() {
                             {months.map((mes, idx) => <MenuItem key={idx} value={mes}>{mes}</MenuItem>)}
                         </Select>
                     </Box>
-                    <Box>
+                    {value ? <Box>
                         <Typography fontWeight='bold' fontSize={18}>Selecciona el tanque:</Typography>
                         <Select value={selecTank} onChange={e => setSelectTank(e.target.value)}>
-                            {value.map((tank, idx) => <MenuItem key={idx} value={tank.name}>{tank.name}</MenuItem>)}
+                            {value.map((tank, idx) => <MenuItem key={idx} value={tank.name}>{tank.name} {tank.water}</MenuItem>)}
                         </Select>
+
+                    </Box> : null}
+                    {value ? <>
+                        <Typography fontWeight='bold' fontSize={18}>Selecciona el color:</Typography>
+                        <HexColorPicker color={color} onChange={setColor} />
+                    </> : null}
+                    <Box>
+                        <Typography fontWeight='bold' fontSize={18}>Selecciona el tanque:</Typography>
                     </Box>
                     <Box>
                         <LoadingButton
@@ -105,7 +186,7 @@ export default function PiVolumen() {
                             color='primary'
                             onClick={reloadData}>Cargar registros</LoadingButton>
                     </Box>
-                    {data ? <DataGrid
+                    <DataGrid
                         autoHeight
                         rows={data}
                         columns={columns}
@@ -116,20 +197,29 @@ export default function PiVolumen() {
                         components={{
                             Toolbar: CustomToolbar,
                         }}
-                    ></DataGrid> : null}
+                    ></DataGrid>
                 </Stack>
             </Paper>
-            <Paper sx={{ p: 4 }} elevation={10}>
-                <Stack spacing={2}>
-                    <Box>
-                        <Typography fontWeight='bold' fontSize={18}>Tipo de gráfica:</Typography>
-                        <Select value={selectTypoGrafica} onChange={e => setTypoGrafica(e.target.value)}>
-                            {typo_grafica.map(val => <MenuItem key={val} value={val}>{val}</MenuItem>)}
-                        </Select>
-                    </Box>
-                </Stack>
-                {graficaData?<ChartJs title='Volumen Vs Tiempo' data={graficaData} type={selectTypoGrafica} />:null}
-            </Paper>
+            {graficaData.length != 0 ?
+                <Paper sx={{ p: 4 }} elevation={10}>
+                    <Stack spacing={2}>
+                        <Box>
+                            <Typography fontWeight='bold' fontSize={18}>Tipo de gráfica:</Typography>
+                            <Select value={selectTypoGrafica} onChange={e => setTypoGrafica(e.target.value)}>
+                                {typo_grafica.map(val => <MenuItem key={val} value={val}>{val}</MenuItem>)}
+                            </Select>
+                        </Box>
+                    </Stack>
+                    <ChartJs title='Volumen Vs Tiempo' data={graficaData} type={selectTypoGrafica} />
+                </Paper> : null}
         </Stack>
     );
 }
+/*
+<Box>
+    <Typography fontWeight='bold' fontSize={18}>Selecciona el tanque:</Typography>
+    <Select value={selecTank} onChange={e => setSelectTank(e.target.value)}>
+        {value.map((tank, idx) => <MenuItem key={idx} value={tank.name}>{tank.name}</MenuItem>)}
+    </Select>
+</Box>
+*/

@@ -51,10 +51,12 @@ function AuthProvider({ children }) {
         }
 
     }
-    async function signOut(sub) {
+    async function signOut() {
         try {
-            const data = await authentication.logout({sub:sub});
-            console.log(data)
+            const data = await authentication.logout();
+            if(data){
+                navigate('/login');
+            }
         } catch (error) {
             console.log(error)
         }

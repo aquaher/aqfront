@@ -2,11 +2,11 @@
 import cookie from "@/service/cookie";
 import { authenticated } from "@/service/auth"
 import { instance } from '@/service/instance';
-const kaycloak_logout = () => {
+const kaycloak_logout = (token_refresh) => {
     var params = new URLSearchParams();
-    params.append('grant_type', import.meta.env.VITE_GRANT_TYPE);
     params.append('client_id', import.meta.env.VITE_CLIENT_ID);
     params.append('client_secret', import.meta.env.VITE_SECRET_CLIENT);
+    params.append('refresh_token', token_refresh);
     return params;
 }
 const kaycloak = (username, password) => {
@@ -109,12 +109,13 @@ const authentication = {
             }
         }
     },
-    logout: async ({sub}) => {
-        const logout = await authenticated.post(`/users/${sub}/logout`,kaycloak_logout())
+    logout: async () => {
+        const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN);
+        const refresh = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN_REFRESH);
+        await authenticated.post(`/protocol/openid-connect/logout?id_token_hint=${token}`,kaycloak_logout(refresh))
         await cookie.deleteCookie(import.meta.env.VITE_COOKIE_TOKEN)
         await cookie.deleteCookie(import.meta.env.VITE_COOKIE_TOKEN_REFRESH)
-        console.log('logout',logout)
-        return logout;
+        return true;
     },
     refresh_session: async () => {
         const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN);

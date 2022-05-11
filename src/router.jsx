@@ -15,6 +15,7 @@ import PiVolumen from "./pages/modules/produccion/informe/volumen";
 import PoVolumen from "./pages/modules/produccion/operador/volumen";
 import PcIndex from "./pages/modules/produccion/control_calidad";
 import Pcparametros from "./pages/modules/produccion/control_calidad/parametros";
+import PiCalidad from "./pages/modules/produccion/informe/calidad";
 
 
 function RequiredAuth({ children }) {
@@ -47,6 +48,7 @@ export function Navigation() {
                         <Route path="bitacora" element={<Pibitacora />} />
                         <Route path="medidor" element={<PiMedidor />} />
                         <Route path="volumen" element={<PiVolumen />} />
+                        <Route path="agua" element={<PiCalidad/>}/>
                     </Route>
                 </Route>
             </Route>

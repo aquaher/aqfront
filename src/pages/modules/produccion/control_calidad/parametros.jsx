@@ -18,7 +18,6 @@ export default function Pcparametros() {
     const [isUpdate, setIsUpdate] = useState(false);
     const [editabel, setEditable] = useState([]);
     async function loadParams(e) {
-        const tank = value.find(e => e.name == optTank);
         setLoad(true)
         //console.log(date.toDateString())
         try {
@@ -79,7 +78,7 @@ export default function Pcparametros() {
     }
     async function editParams(e) {
 
-        if (new Date(data[0].quality.date).toLocaleDateString() > date.toLocaleDateString()) {
+        if (data[0].quality.date >= format(date, 'yyyy-MM-dd')) {
             AlertSwal.fire({
                 title: `¿Estas seguro que deseas registrar los parametros para ${optTank}?`,
                 showConfirmButton: true,
