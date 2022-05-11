@@ -8,7 +8,7 @@ async function getParameters({date,tank_id}){
 }
 
 async function setParameters({tank_id,lote}){
-    const {data} = await instance.post(path,{params:{tank_id:tank_id,lote:lote}});
+    const {data} = await instance.post(path+`?lote=${lote}&tank_id=${tank_id}`);
     return data;
 }
 /**
