@@ -10,6 +10,7 @@ import { Navigation } from './router';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import 'sweetalert2/dist/sweetalert2.css'
+import "@patternfly/react-core/dist/styles/base.css";
 import '@/assets/global.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(

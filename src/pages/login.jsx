@@ -3,7 +3,6 @@ import { LoginForm, LoginPage, LoginMainFooterBandItem } from '@patternfly/react
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import img from '@/assets/img/b.png'
 import logo from '@/assets/img/l_aquaher.png'
-import "@patternfly/react-core/dist/styles/base.css";
 import { useAuth } from '@/auth/AuthProvider';
 import { AlertSwal } from '@/service/sweetAlert';
 function Login() {
