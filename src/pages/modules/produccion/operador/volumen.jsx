@@ -98,6 +98,10 @@ export default function PoVolumen() {
                 setVolumen(res)
             }
         } catch (error) {
+            AlertSwal.fire({
+                title: 'No existen datos en este tanque,¡Registralos ahora!',
+                confirmButtonText: 'Aceptar',
+            })
             setVolumen({
                 vol: 0,
                 turn: null,

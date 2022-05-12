@@ -1,6 +1,6 @@
-import { getTurnById } from "@/api/turn";
+import { getTurnById,registerTurn,endTurnAndCreate } from "@/api/turn";
 import { getUserByOperator, registerOperator } from "@/api/user";
-import { useSession } from "@/auth/AuthProvider";
+import { useAuth, useSession } from "@/auth/AuthProvider";
 import { selectTurn, setTurn } from "@/reducer/turn";
 import { Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
@@ -8,6 +8,7 @@ import { Skeleton, Box, Typography, Dialog, DialogTitle, DialogContent, DialogAc
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents } from "@/api/utils";
+import { AlertSwal } from "@/service/sweetAlert";
 
 export default function CoIndex() {
     const { user } = useSession()
@@ -15,26 +16,44 @@ export default function CoIndex() {
     const turn = useSelector(selectTurn);
     const [operarios, setOperarios] = useState([]);
     const [optOperador, setOptOperador] = useState();
+    const {signOut} = useAuth();
     //TODO valida que si no existe el start date que registre el incio de turno 
     //TODO valida que si existe start_date no haga nada mas y pueda usar el sistemas
     //TODO VALIDA QUE si otro usuari ingresa no pueda hacer nada si el no esta activo
     useEffect(() => {
+        (async () => {
+            setOperarios(await getUserByOperator());
+        })()
         if (!turn.user) {
-            (async () => {
-                setOperarios(await getUserByOperator());
-            })()
-            console.log(user)
             dispatch(getTurnById({ id: user.sub }));
             dispatch(getEvents());
         }
 
     }, [dispatch])
-    function finalizeTurn(e) { }
+    async function finalizeTurn(e) { 
+        try {
+            const nextOp = operarios.find(el=>el.username == optOperador);
+            console.log(nextOp)
+            console.log(turn.turn.id)
+            await endTurnAndCreate({turn_id:turn.turn.id,user_id:nextOp.id});
+            AlertSwal.fire({
+                title:'Finalizando el turno',
+                confirmButtonText:'Salir',
+                text:'¡Saludos, nos veremos mañana!',
+                preConfirm:async()=>{
+                    await signOut();
+                }
+            })
+            
+        } catch (error) {
+            
+        }
+        
+    }
     if (turn.loading) return <Skeleton />;
     return (
         <>
             <Stack alignItems='center' justifyContent='center'>
-
                 <Paper elevation={10} sx={{ p: 2 }}>
                     <Stack spacing={2}>
                         <Typography fontSize={18} fontWeight='bold'>Selecciona el operador a pasar el turno</Typography>
@@ -46,68 +65,71 @@ export default function CoIndex() {
                     </Stack>
                 </Paper>
             </Stack>
+            {turn.turn.user?<ModalRegister turn={turn.turn} user={user}/>:<ModalNoTurn/>}
         </>
     );
 }
 //TODO: HACER QUE registre el turno 
-function ModalRegister({ turn, messaje, operador }) {
+function ModalNoTurn(){
+    const {signOut} = useAuth();
+    const [open, setOpen] = useState(true);
+    return(
+        <Dialog open={open}>
+            <DialogTitle>Tu turno no esta habilitado</DialogTitle>
+            <DialogContent>
+                <Typography>Lo sentimos verifica que el operador con turno haya finalizado</Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button variant="contained" color='error' onClick={async()=>await signOut()}>Salir</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+function ModalRegister({ turn,user }) {
     const [open, setOpen] = useState(true);
     const [saveTurn, setSaveTurn] = useState(false);
     const [selectOp, setSelectOp] = useState(turn);
-    const { user } = useSession();
+    const [start_date,setStartDate] = useState(new Date());
+    const {signOut} = useAuth();
     const dispatch = useDispatch();
     async function registerOp(e) {
         setSaveTurn(true)
-
-        if (selectOp.operador) {
-            const data = await registerOperator(selectOp)
-            dispatch(setTurn(data))
-        } else {
-            console.error('registra el turno')
+        try {
+            dispatch(registerTurn({turn_id:turn.id,user_id:user.sub}))
+        } catch (error) {
+            
         }
         setSaveTurn(false)
-        //const data = registerOp(turn)
     }
     return (
         <Dialog open={open}>
-            <DialogTitle>{messaje}</DialogTitle>
+            <DialogTitle>Registro de turno</DialogTitle>
             <DialogContent>
                 <Box>
-                    <Stack direction='row'>
-                        <Typography>Turno número: </Typography>
+                    <Stack direction='row' spacing={1}>
+                        <Typography>Turno número:</Typography>
                         <Typography fontWeight='bold'>{selectOp.turn}</Typography>
                     </Stack>
-                    <Stack direction='row'>
-                        <Typography>Fecha de inicio: </Typography>
-                        <Typography fontWeight='bold'>{selectOp.start_date}</Typography>
+                    <Stack direction='row'  spacing={1}>
+                        <Typography>Fecha de inicio:</Typography>
+                        <Typography fontWeight='bold'>{turn.start_date}</Typography>
                     </Stack>
-                    <Stack direction='row'>
-                        <Typography>Fecha de finalización: </Typography>
-                        <Typography fontWeight='bold'>{selectOp.end_date}</Typography>
-                    </Stack>
-                    <Stack mt={2}>
-                        <Select
-                            disabled={turn.operador ? true : false}
-                            value={selectOp.operador ? selectOp.operador : "Selecciona el operador"}
-                            onChange={(v) => setSelectOp({ ...selectOp, operador: v.target.value })}
-                        >
-                            <MenuItem value="Selecciona el operador">Selecciona el operador</MenuItem>
-                            {operador.map(v => <MenuItem value={v.username} key={v.id}>{v.username}</MenuItem>)}
-                        </Select>
+                    <Stack direction='row'  spacing={1}>
+                        <Typography>Nombre del operador:</Typography>
+                        <Typography fontWeight='bold'>{user.name}</Typography>
                     </Stack>
                 </Box>
             </DialogContent>
             <DialogActions>
-
-                <LoadingButton
-                    disabled={turn.operador ? true : false}
-                    loading={saveTurn}
-                    startIcon={<Save />}
-                    loadingPosition="start"
-                    variant="contained"
-                    color="success"
-                    onClick={registerOp}>Registrar turno</LoadingButton>
-                {user.name == turn.operador ? <Button variant="outlined" color="error" disabled={!turn.operador} onClick={() => setOpen(!open)}>Cerrar</Button> : null}
+                {user.name == turn.user.username?
+                turn.start_date?
+                    <Button variant="contained" color='error' onClick={()=>setOpen(false)}>
+                    Cerrar
+                    </Button>:
+                    <LoadingButton loading={saveTurn} startIcon={<Save/>} variant="contained" color='primary' onClick={registerOp}>
+                        Registrar el turno
+                    </LoadingButton>:
+                <Button variant="contained" color='error' onClick={async()=>await signOut()}>Salir</Button>}
             </DialogActions>
         </Dialog>
     )

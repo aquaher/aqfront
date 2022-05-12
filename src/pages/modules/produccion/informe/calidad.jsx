@@ -9,15 +9,21 @@ import { format } from "date-fns";
 import { getParameters } from "@/api/parameters";
 import { DataGrid, GridActionsCellItem, GridToolbar, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid";
 import { AlertSwal } from "@/service/sweetAlert";
+import CcIndex from "@/components/calidad/CcIndex";
 
-const columns = [
+
+export default function PiCalidad() {
+    return(<CcIndex/>);
+}
+
+/*const columns = [
     { field: 'parametro', headerName: 'Parametro', width: 150, valueGetter: (params) => `${params.row.method.name}` || '' },
     { field: 'result', headerName: 'Resultado', width: 150 },
     { field: 'unidad', headerName: 'Unidad', width: 150, valueGetter: (params) => `${params.row.method.unit.symbol || ''}` },
     { field: 'metodo', headerName: 'Método', width: 150, valueGetter: (params) => `${params.row.method.symbol}` || '' },
-];
+];*/
 
-export default function PiCalidad() {
+/*export default function PiCalidad() {
     const { value } = useSelector(selectTank);
     const [optTank, setOptTank] = useState('TQ-1');
     const [date, setDate] = useState(new Date());
@@ -104,4 +110,4 @@ export default function PiCalidad() {
             </Paper>
         </Stack>
     );
-}
+}*/

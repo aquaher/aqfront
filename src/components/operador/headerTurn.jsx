@@ -11,8 +11,6 @@ export default function HeaderTurn({ turn,title }) {
                     <Typography fontWeight='bold'>Turno: {turn.turn}</Typography>
                     <Typography fontWeight='bold'>Inicio de turno:</Typography>
                     <TextField disabled value={turn.start_date}></TextField>
-                    <Typography fontWeight='bold'>Fin de turno:</Typography>
-                    <TextField disabled value={turn.end_date}></TextField>
                 </Stack>
             </Paper>
         </Stack>

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 const columns = [
     { field: 'turno', headerName: 'Fecha', width: 150, valueGetter: (params) => `${params.row.turn.turn}` || '' },
     { field: 'fecha', headerName: 'Tanque', width: 170, valueGetter: (params) => `${new Date(params.row.turn.start_date).toLocaleDateString() || ''}` },
-    { field: 'operador', headerName: 'Operador', width: 170, valueGetter: (params) => `${params.row.turn.operador || ''}` },
+    { field: 'operador', headerName: 'Operador', width: 170, valueGetter: (params) => `${params.row.turn.user.username || ''}` },
     { field: 'measurement_channel', headerName: 'Canal', width: 170 },
     { field: 'measurement_time', headerName: 'Hora', width: 170 },
     { field: 'reading_kvarh_8', headerName: 'Kvarh 8', width: 170 },

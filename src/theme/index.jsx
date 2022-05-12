@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material';
 import { esES } from '@mui/x-data-grid';
 export const themeMaterial = createTheme({
-  
+
   breakpoints: {
     values: {
       xs: 0,
@@ -296,5 +296,15 @@ export const themeMaterial = createTheme({
       fontSize: '1.125rem',
       lineHeight: 1.375
     }
-  }
-},esES);
+  },
+  print: {
+    '@media print': {
+      display: 'block',
+    },
+  },
+  parentContainer: {
+    '@media print': {
+      display: 'block'
+    },
+  },
+}, esES);

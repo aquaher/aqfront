@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { LoginForm, LoginPage, LoginMainFooterBandItem } from '@patternfly/react-core'
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import img from '@/assets/img/b.png'
-import logo from '@/assets/img/g_heredia.png'
+import logo from '@/assets/img/l_aquaher.png'
 import "@patternfly/react-core/dist/styles/base.css";
 import { useAuth } from '@/auth/AuthProvider';
 import { AlertSwal } from '@/service/sweetAlert';
@@ -26,7 +26,7 @@ function Login() {
       didOpen: async () => {
         AlertSwal.showLoading();
         await signIn(username, password);
-          AlertSwal.close()
+          AlertSwal.close();
       },
     })
   }
@@ -70,7 +70,6 @@ function Login() {
         backgroundImgSrc={img}
 
         backgroundImgAlt="Images"
-        textContent="Aplicacion para usuarios pertenecientes al grupo heredia"
         loginTitle="Inicia sesión con tu cuenta"
         loginSubtitle="Ingresa aqui tus credenciales"
         forgotCredentials={forgotCredentials}

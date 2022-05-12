@@ -62,7 +62,7 @@ export default function Bitacora() {
     }
     return (
         <Stack spacing={2}>
-            <HeaderTurn turn={turn} title={`Bitácora de ${turn.operador}`}/>
+            <HeaderTurn turn={turn} title={`Bitácora de ${turn.user.username}`}/>
             <Stack alignItems='center' >
                 <Paper sx={{ p: 2 }} elevation={10}>
                     <Stack spacing={1} width={300}>

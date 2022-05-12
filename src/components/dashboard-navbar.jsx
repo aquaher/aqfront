@@ -9,6 +9,7 @@ import { Users as UsersIcon } from './icons/users';
 import { useState } from 'react';
 import { LogoutOutlined } from '@mui/icons-material';
 import { useSession,useAuth } from '@/auth/AuthProvider';
+import avatar from '@/assets/img/g_heredia.png'
 
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
@@ -26,6 +27,9 @@ export const DashboardNavbar = (props) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose =async () => {
+    setAnchorEl(null);
+  };
+  const finalizarSession = async () => {
     setAnchorEl(null);
     await signOut();
   };
@@ -94,7 +98,7 @@ export const DashboardNavbar = (props) => {
                 height: 40,
                 width: 40,
               }}
-              src="../assets/static/images/avatars/avatar_1.png"
+              src={avatar}
             >
               <UserCircleIcon fontSize="small" />
             </Avatar>
@@ -127,7 +131,7 @@ export const DashboardNavbar = (props) => {
               height: 40,
               width: 40,
             }}
-            src="../assets/static/images/avatars/avatar_1.png"
+            src={avatar}
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>
@@ -141,7 +145,7 @@ export const DashboardNavbar = (props) => {
           mb:0.5
         }}/>
         <Box paddingBottom={1} paddingTop={1}>
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={finalizarSession}>
             <ListItemIcon sx={{ml:2}}><LogoutOutlined/></ListItemIcon>
             <ListItemText>Cerrar sesion</ListItemText>
           </MenuItem>

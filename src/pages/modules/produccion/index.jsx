@@ -1,13 +1,13 @@
 import getTank from "@/api/tank";
 import { Stack,Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { Outlet } from "react-router-dom";
 
 export default function PIndex() {
     const dispatch = useDispatch();
-    useState(()=>{
+    useEffect(()=>{
         dispatch(getTank())
     },[dispatch])
     return (

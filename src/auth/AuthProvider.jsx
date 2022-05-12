@@ -23,6 +23,7 @@ function AuthProvider({ children }) {
             try {
                 const user = await authentication.refresh_session();
                 if(user){
+                    setError(null)
                     setSession(user)
                     navigate('/')
                 }
@@ -40,6 +41,7 @@ function AuthProvider({ children }) {
         try {
             const data = await authentication.login(username, password);
             if (data) {
+                setError(null)
                 setSession(data);
                 navigate('/')
             }

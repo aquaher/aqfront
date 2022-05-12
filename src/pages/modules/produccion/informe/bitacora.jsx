@@ -5,10 +5,11 @@ import { DataGrid, GridActionsCellItem, GridToolbar, GridToolbarContainer, GridT
 import { useEffect, useState } from "react";
 import { months } from "@/constant/utils";
 import { LoadingButton } from "@mui/lab";
+import { AlertSwal } from "@/service/sweetAlert";
 
 const columns = [
     { field: 'fecha', headerName: 'Fecha', width: 150, valueGetter: (params) => `${new Date(params.row.turn.start_date).toLocaleDateString()}` || '' },
-    { field: 'operator', headerName: 'Operador', width: 170, valueGetter: (params) => `${params.row.turn.operador || ''}` },
+    { field: 'operator', headerName: 'Operador', width: 170, valueGetter: (params) => `${params.row.turn.user.username || ''}` },
     { field: 'start_time', headerName: 'Hora de inicio', width: 150 },
     { field: 'end_time', headerName: 'Hora de finalización', width: 150 },
     { field: 'section', headerName: 'Sección', width: 170 },
@@ -57,9 +58,19 @@ export default function Pibitacora() {
 
             if (res) {
                 setData(res);
+            }else{
+                setData([]);
+                AlertSwal.fire({
+                    title:'Lo sentimos no hay datos registrados en este mes',
+                    icon:'error'
+                });
             }
         } catch (error) {
             setData([]);
+            AlertSwal.fire({
+                title:'Lo sentimos no hay datos registrados en este mes',
+                icon:'error'
+            });
         }
         setLoad(false)
     }
