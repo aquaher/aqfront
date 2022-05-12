@@ -1,39 +1,38 @@
 import { setTurn } from "@/reducer/turn";
 import { instance } from "@/service/instance"
+const path = '/turn';
+function getTurnById({id}){
+    return async (dispatch)=>{
+        instance.get(path,{params:{id:id}}).then(data=>{
+            dispatch(setTurn(data.data))
+        })
+    }    
+}
+/**
+ * turno actula y usuario a pasar el turno
+ * @param {*} param0 
+ * @returns 
+ */
+async function endTurnAndCreate({turn_id,user_id}){
+    const {data} = await instance.get(path+'/finalize',{params:{turn_id:turn_id,user_id:user_id}});
+    return data;
+}
+/**
+ * turno y usuario actual
+ * @param {*} param0 
+ * @returns 
+ */
+function registerTurn({turn_id,user_id}){
+    return async (dispatch)=>{
+        instance.get(path+'/register',{params:{turn_id:turn_id,user_id:user_id}}).then(data=>{
+            dispatch(setTurn(data.data))
+        })
+    }
+}
 
-export function verifyTurnByUser(){
-    return async (dispatch) =>{
-        const {data} = await instance.get("/turn")
-        switch (data.messaje) {
-            case 'registrado':
-                const last = await getTurnLast('registrado')
-                dispatch(setTurn(last));
-            case 'siguente':
-                const create = await getTurnCreate()
-                dispatch(setTurn(create));
-            case 'registra':
-                const lastT = await getTurnLast('registra')
-                dispatch(setTurn(lastT));
-            default:
-                break;
-        }
-    }
+export {
+    getTurnById,
+    endTurnAndCreate,
+    registerTurn
 }
-async function getTurnLast(msg){
-    const last = await instance.get('/turn/last');
-    if(last.status==200){
-        return {
-            ...last.data,
-            messaje:msg!='registra'?"El turno ya esta registrado":'Registra el turno'
-        };
-    }
-}
-async function getTurnCreate(){
-    const last = await instance.get('/turn/create');
-    if(last.status==200){
-        return {
-            ...last.data,
-            messaje:'Registra el turno'
-        };
-    }
-}
+
