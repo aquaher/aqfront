@@ -24,9 +24,7 @@ export default function PoVolumen() {
     useEffect(() => {
         (async () => {
             try {
-                console.log(turn)
                 const res = await getVolumenByTurnAndTank({ tank_id: 1, turn_id: turn.id });
-                console.log(res)
                 if (res) {
                     setIsEdit(true)
                     setVolumen(res)
@@ -52,7 +50,6 @@ export default function PoVolumen() {
                 try {
                     if (!isEdit) {
                         let data = { ...volumen, turn: turn, tank: value.find(r => r.name == optTank) }
-                        console.log(data)
                         const res = await setRegisterVolumen(data);
                         if (res) {
                             setIsEdit(true)
@@ -66,7 +63,7 @@ export default function PoVolumen() {
                         }
                     }
                 } catch (error) {
-                    console.log(error)
+                    
                     setIsEdit(false)
                     setVolumen({
                         vol: 0,
@@ -119,7 +116,7 @@ export default function PoVolumen() {
                 <Paper sx={{ p: 2 }} elevation={10}>
                     <Stack spacing={1} minWidth={300}>
                         <Stack alignItems='center'>
-                            <Typography fontWeight='bold' fontSize={20}>Registro de medidores</Typography>
+                            <Typography fontWeight='bold' fontSize={20}>Volumenes de agua por tanque</Typography>
                         </Stack>
                         <Typography fontWeight='bold'>Selecciona el tanque a registrar</Typography>
                         <Select value={optTank} onChange={e => setOptTank(e.target.value)}>

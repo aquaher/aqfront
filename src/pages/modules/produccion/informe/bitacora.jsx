@@ -23,7 +23,7 @@ const columns = [
             <GridActionsCellItem
                 icon={<Edit color='warning' />}
                 label="Editar"
-                onClick={e => console.log(params.row)}
+                
             />,
         ]
     }
@@ -77,7 +77,7 @@ export default function Pibitacora() {
     function edit(e) {
         if (selectionModel.length != 0) {
             selectionModel.map(idx => {
-                console.log('Elimina el elemento', data[idx - 1])
+                
             })
         }
     }

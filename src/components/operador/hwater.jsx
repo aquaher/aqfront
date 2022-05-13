@@ -59,10 +59,10 @@ export default function Hwater({ tanque, turn }) {
                     try {
                         let res = null;
                         if(!edit){
-                            console.log('regis')
+                            
                             res = await setRegisterWater({ ...data, total_produced: total_produced });
                         }else{
-                            console.log('edit')
+                            
                             res = await putRegisterWater({ ...data, total_produced: total_produced });
                         }
                         setEdit(true);

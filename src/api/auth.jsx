@@ -1,7 +1,7 @@
 
 import cookie from "@/service/cookie";
 import { authenticated } from "@/service/auth"
-import { instance } from '@/service/instance';
+
 const kaycloak_logout = (token_refresh) => {
     var params = new URLSearchParams();
     params.append('client_id', import.meta.env.VITE_CLIENT_ID);
@@ -69,41 +69,17 @@ const authentication = {
                 const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
                 if (userinfo) {
                     if (userinfo.status == 200) {
-                        const access = await instance.get('/users_access', {
-                            params: {
-                                id: userinfo.data.sub
-                            }
-                        });
-                        if (access) {
-                            if (access.status == 200) {
-                                /**Arreglar menu solo ordenado */
-                                let data = []
-                                /*
-                                LO PASE AL BACKEND
-                                access.data.map(elemento => {
-                                    let nav = elemento.path.split("/");
-                                    principal(data, elemento, nav);
-                                })*/
-                                return {
-                                    ...token.data,
-                                    expires_in: expires_in,
-                                    refresh_expires_in: refresh_expires_in,
-                                    user: {
-                                        ...userinfo.data,
-                                        access: access.data
-                                    }
-                                }
-                            }
-                        } else {
-                            return {
-                                ...token.data,
-                                expires_in: expires_in,
-                                refresh_expires_in: refresh_expires_in,
-                                user: {
-                                    ...userinfo.data
-                                }
+
+
+                        return {
+                            ...token.data,
+                            expires_in: expires_in,
+                            refresh_expires_in: refresh_expires_in,
+                            user: {
+                                ...userinfo.data
                             }
                         }
+
                     }
                 }
             }
@@ -112,7 +88,7 @@ const authentication = {
     logout: async () => {
         const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN);
         const refresh = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN_REFRESH);
-        await authenticated.post(`/protocol/openid-connect/logout?id_token_hint=${token}`,kaycloak_logout(refresh))
+        await authenticated.post(`/protocol/openid-connect/logout?id_token_hint=${token}`, kaycloak_logout(refresh))
         await cookie.deleteCookie(import.meta.env.VITE_COOKIE_TOKEN)
         await cookie.deleteCookie(import.meta.env.VITE_COOKIE_TOKEN_REFRESH)
         return true;
@@ -126,35 +102,14 @@ const authentication = {
                     const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
                     if (userinfo) {
                         if (userinfo.status == 200) {
-                            const access = await instance.get('/users_access', {
-                                params: {
-                                    id: userinfo.data.sub
-                                }
-                            });
-                            if (access) {
-                                if (access.status == 200) {
-                                    /**Arreglar menu solo ordenado */
-                                    /*let data = []
-                                    access.data.map(elemento => {
-                                        let nav = elemento.path.split("/");
-                                        principal(data, elemento, nav);
-                                    })*/
-                                    return {
-                                        access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
-                                        user: {
-                                            ...userinfo.data,
-                                            access: access.data
-                                        }
-                                    }
-                                }
-                            } else {
-                                return {
-                                    access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
-                                    user: {
-                                        ...userinfo.data
-                                    }
+
+                            return {
+                                access_token: await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN),
+                                user: {
+                                    ...userinfo.data
                                 }
                             }
+
                         }
                     }
 
@@ -179,38 +134,16 @@ const authentication = {
                         const userinfo = await authenticated.get('/protocol/openid-connect/userinfo')
                         if (userinfo) {
                             if (userinfo.status == 200) {
-                                const access = await instance.get('/users_access', {
-                                    params: {
-                                        id: userinfo.data.sub
-                                    }
-                                });
-                                if (access) {
-                                    if (access.status == 200) {
-                                        /*let data = []
-                                        access.data.map(elemento => {
-                                            let nav = elemento.path.split("/");
-                                            principal(data, elemento, nav);
-                                        })*/
-                                        return {
-                                            ...token.data,
-                                            expires_in: expires_in,
-                                            refresh_expires_in: refresh_expires_in,
-                                            user: {
-                                                ...userinfo.data,
-                                                access: access.data
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    return {
-                                        ...token.data,
-                                        expires_in: expires_in,
-                                        refresh_expires_in: refresh_expires_in,
-                                        user: {
-                                            ...userinfo.data
-                                        }
+
+                                return {
+                                    ...token.data,
+                                    expires_in: expires_in,
+                                    refresh_expires_in: refresh_expires_in,
+                                    user: {
+                                        ...userinfo.data
                                     }
                                 }
+
                             }
                         }
                     }

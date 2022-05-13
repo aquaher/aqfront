@@ -19,7 +19,7 @@ export default function Pcparametros() {
     const [editabel, setEditable] = useState([]);
     async function loadParams(e) {
         setLoad(true)
-        //console.log(date.toDateString())
+        
         try {
             const tank_id = value.find(e => e.name == optTank).id;
             const getData = await getParameters({ date: format(date, 'yyyy-MM-dd'), tank_id: tank_id });
@@ -29,7 +29,7 @@ export default function Pcparametros() {
                 setData(getData)
             }
         } catch (error) {
-            console.log(error)
+            
         }
         setLoad(false)
     }

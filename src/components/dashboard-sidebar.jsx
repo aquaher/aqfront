@@ -4,13 +4,12 @@ import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/ma
 import { Logo } from './logo';
 
 import MenuItem from './MenuItem';
-import { useSession } from '@/auth/AuthProvider';
+
 import { menu } from '@/service/navigation';
 
-export const DashboardSidebar = (props) => {
-  const { user } = useSession();
-  const { open, onClose } = props;
 
+export const DashboardSidebar = (props) => {
+  const { open, onClose,access } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
@@ -18,7 +17,7 @@ export const DashboardSidebar = (props) => {
 
   useEffect(
     () => {
-
+      
       if (open) {
         onClose?.();
       }
@@ -56,7 +55,7 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {user.access.map((item, key) => <MenuItem key={key} item={item}></MenuItem>)}
+          {access.map((item, key) => <MenuItem key={key} item={item}></MenuItem>)}
         </Box>
 
       </Box>

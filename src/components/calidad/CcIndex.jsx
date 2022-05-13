@@ -46,7 +46,7 @@ export default function CcIndex() {
                 });
             }
         } catch (error) {
-            console.log(error)
+            
         }
         setLoad(false)
     }

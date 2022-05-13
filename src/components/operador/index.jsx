@@ -33,8 +33,7 @@ export default function CoIndex() {
     async function finalizeTurn(e) { 
         try {
             const nextOp = operarios.find(el=>el.username == optOperador);
-            console.log(nextOp)
-            console.log(turn.turn.id)
+            
             await endTurnAndCreate({turn_id:turn.turn.id,user_id:nextOp.id});
             AlertSwal.fire({
                 title:'Finalizando el turno',

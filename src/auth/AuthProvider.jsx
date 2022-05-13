@@ -60,7 +60,7 @@ function AuthProvider({ children }) {
                 navigate('/login');
             }
         } catch (error) {
-            console.log(error)
+            
         }
         
     }
