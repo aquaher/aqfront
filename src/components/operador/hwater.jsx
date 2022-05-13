@@ -17,7 +17,7 @@ export default function Hwater({ tanque, turn }) {
     const [edit, setEdit] = useState(false);
     const [data, setData] = useState({...model});
     const total_produced = useMemo(() =>
-        parseInt(data.start_vol) - parseInt(data.end_vol) + parseInt(data.dispatch)
+        Math.abs(parseInt(data.end_vol) - parseInt(data.start_vol) + parseInt(data.dispatch))
         , [
             data.start_vol,
             data.end_vol,
