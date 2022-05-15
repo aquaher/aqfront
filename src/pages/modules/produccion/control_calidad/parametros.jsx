@@ -1,7 +1,7 @@
 import { selectTank } from "@/reducer/tank";
 import { Repeat, SaveAsRounded } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Paper, Stack, Typography, TextField, Box, Select, MenuItem } from "@mui/material";
+import { Paper, Stack, Typography, TextField, Box, Select, MenuItem, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -19,7 +19,7 @@ export default function Pcparametros() {
     const [editabel, setEditable] = useState([]);
     async function loadParams(e) {
         setLoad(true)
-        
+        setData([])
         try {
             const tank_id = value.find(e => e.name == optTank).id;
             const getData = await getParameters({ date: format(date, 'yyyy-MM-dd'), tank_id: tank_id });
@@ -29,7 +29,7 @@ export default function Pcparametros() {
                 setData(getData)
             }
         } catch (error) {
-            
+
         }
         setLoad(false)
     }
@@ -56,7 +56,7 @@ export default function Pcparametros() {
                     preConfirm: async (txt) => {
                         try {
                             const tank_id = value.find(e => e.name == optTank).id;
-                            const params = await setParameters({ tank_id: tank_id, lote: txt,date:format(date, 'yyyy-MM-dd') });
+                            const params = await setParameters({ tank_id: tank_id, lote: txt, date: format(date, 'yyyy-MM-dd') });
                             setData(params)
                         } catch (error) {
                             AlertSwal.showValidationMessage(
@@ -146,25 +146,37 @@ export default function Pcparametros() {
                 </Stack>
 
             </Paper>
-            {data.length != 0 ? <Paper sx={{ p: 2 }} elevation={10}>
-                <Stack spacing={2}>
-                    <Stack direction='row' spacing={1}>
-                        <Typography fontWeight='bold' fontSize={20} width={209}>PARAMETROS</Typography>
-                        <Typography fontWeight='bold' fontSize={20} width={209}>RESULTADO</Typography>
-                        <Typography fontWeight='bold' fontSize={20} width={209}>UNIDAD</Typography>
-                        <Typography fontWeight='bold' fontSize={20} width={209}>MÉTODO</Typography>
-                    </Stack>
-                    {data.map((param, idx) => {
-                        return (<Stack direction='row' spacing={1} key={param.id}>
-                            <TextField disabled value={param.method.name}></TextField>
-                            <TextField value={param.result || ''} onChange={(e) => {
-                                param.result = e.target.value;
-                                setData([...data])
-                            }}></TextField>
-                            <TextField disabled value={param.method.unit.symbol}></TextField>
-                            <TextField disabled value={param.method.symbol}></TextField>
-                        </Stack>)
-                    })}
+            {data.length != 0 ?
+                <>
+                    <TableContainer>
+                        <Table sx={{ minWidth: 650 }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>PARAMETROS</TableCell>
+                                    <TableCell>RESULTADO</TableCell>
+                                    <TableCell>UNIDAD</TableCell>
+                                    <TableCell>MÉTODO</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {data.map((param, idx) => {
+                                    return (
+                                        <TableRow key={idx}>
+                                            <TableCell>{param.method.name}</TableCell>
+                                            <TableCell>
+                                                <TextField value={param.result||''} onChange={(e) => {
+                                                    param.result = e.target.value;
+                                                    setData([...data])
+                                                }}></TextField>
+                                            </TableCell>
+                                            <TableCell>{param.method.unit.symbol}</TableCell>
+                                            <TableCell>{param.method.symbol}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                     <Stack alignItems='center'>
                         <LoadingButton
                             loading={isLoad}
@@ -173,8 +185,9 @@ export default function Pcparametros() {
                             color='primary'
                             onClick={editParams}>Registrar</LoadingButton>
                     </Stack>
-                </Stack>
-            </Paper> : null}
+                </>
+                : null}
+
         </Stack >
     );
 }
