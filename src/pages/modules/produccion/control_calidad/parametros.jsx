@@ -56,7 +56,7 @@ export default function Pcparametros() {
                     preConfirm: async (txt) => {
                         try {
                             const tank_id = value.find(e => e.name == optTank).id;
-                            const params = await setParameters({ tank_id: tank_id, lote: txt });
+                            const params = await setParameters({ tank_id: tank_id, lote: txt,date:format(date, 'yyyy-MM-dd') });
                             setData(params)
                         } catch (error) {
                             AlertSwal.showValidationMessage(
