@@ -79,12 +79,12 @@ export default function Medidor() {
     }
     return (
         <Stack spacing={2}>
-            <HeaderTurn turn={turn} title={'Registro de medidores'} />
+            <HeaderTurn turn={turn} title={'Turno de registro de medidores'} />
             <Stack alignItems='center' >
                 <Paper sx={{ p: 2 }} elevation={10} >
                     <Stack width={300} spacing={1}>
                         <Stack alignItems='center'>
-                            <Typography fontWeight='bold' fontSize={20}>Registro de bitácora</Typography>
+                            <Typography fontWeight='bold' fontSize={20}>Registro de medidores de luz</Typography>
                         </Stack>
                         <TextField value={medidores.measurement_time} type='time' onChange={e => setMedidores({ ...medidores, measurement_time: e.target.value })}></TextField>
                         <Typography fontWeight='bold'>Medicion canal</Typography>

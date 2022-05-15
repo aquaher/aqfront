@@ -39,7 +39,7 @@ export default function PoVolumen() {
     async function registrar(e) {
         setLoad(true);
         AlertSwal.fire({
-            title: '¿Seguro que deseas guardar el registro de los medidores?',
+            title: '¿Seguro que deseas guardar el registro del volumen de agua?',
             showConfirmButton: true,
             confirmButtonText: 'Aceptar',
             showLoaderOnConfirm: true,
@@ -111,7 +111,7 @@ export default function PoVolumen() {
     }
     return (
         <Stack spacing={2}>
-            <HeaderTurn turn={turn} title='Medidores de Luz' />
+            <HeaderTurn turn={turn} title='Volumenes de tanques' />
             <Stack alignItems='center' >
                 <Paper sx={{ p: 2 }} elevation={10}>
                     <Stack spacing={1} minWidth={300}>
@@ -133,7 +133,7 @@ export default function PoVolumen() {
                 <Paper sx={{ p: 2 }} elevation={10}>
                     <Stack spacing={1} minWidth={300}>
                         <Stack alignItems='center'>
-                            <Typography fontWeight='bold' fontSize={20}>Registro de medidores</Typography>
+                            <Typography fontWeight='bold' fontSize={20}>Registro de volumenes</Typography>
                         </Stack>
                         <Typography fontWeight='bold'>Ingresa el volumen del tanque {optTank}</Typography>
                         <TextField value={volumen.vol} onChange={e => setVolumen({ ...volumen, vol: e.target.value })} type='number' />
