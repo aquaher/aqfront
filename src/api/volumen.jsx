@@ -20,6 +20,7 @@ async function getVolumenByTurnAndTank({turn_id,tank_id}){
     return data;
 }
 
+
 async function getVolumensByMonthAndTurn({month,turn,tank_name}){
     const {data} = await instance.get(path+'/informe',{params:{month:month,turn:turn,name:tank_name}});
     return data;
@@ -34,6 +35,12 @@ async function getVolByTurnAndRangueDateAndTurn({start_date,end_date,turn}){
     return data;
 }
 
+async function getVolByTurnAndRangueDateAndTurnAndTank({start_date,end_date,turn,tank_id}){
+    const {data} = await instance.get(path+'/range/tank',{params:{start_date:start_date,end_date:end_date,turn:turn,tank_id:tank_id}});
+    return data;
+}
+
+
 export {
     getVolumenById,
     setRegisterVolumen,
@@ -41,5 +48,6 @@ export {
     getVolumenByTurnAndTank,
     getVolumensByMonthAndTurn,
     getVolByTurnAndRangueDate,
-    getVolByTurnAndRangueDateAndTurn
+    getVolByTurnAndRangueDateAndTurn,
+    getVolByTurnAndRangueDateAndTurnAndTank
 }

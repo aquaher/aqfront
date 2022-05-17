@@ -5,7 +5,7 @@ export const tankSlice = createSlice({
     initialState:{
         loading: true,
         error:false,
-        value:null
+        value:[]
     },
     reducers:{
         setTank(state,{payload}){
