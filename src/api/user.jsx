@@ -1,13 +1,18 @@
-import { instance } from "@/service/instance"
+import { instance } from "@/service/instance";
+
+const path = '/users';
+
+async function getUsers() {
+    const { data } = await instance.get(path);
+    return data;
+   }
+
 async function getUserByOperator() {
- const { data } = await instance.get("/users/operador")
+ const { data } = await instance.get(path+'/operador');
  return data;
 }
-async function registerOperator(turn){
-    const {data} = await instance.put('/turn',turn)
-    return data;
-}
+
 export {
     getUserByOperator,
-    registerOperator
+    getUsers
 }

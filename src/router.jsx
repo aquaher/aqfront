@@ -16,6 +16,9 @@ import PoVolumen from "./pages/modules/produccion/operador/volumen";
 import PcIndex from "./pages/modules/produccion/control_calidad";
 import Pcparametros from "./pages/modules/produccion/control_calidad/parametros";
 import PiCalidad from "./pages/modules/produccion/informe/calidad";
+import SIndex from "./pages/modules/sistema";
+import Susuarios from "./pages/modules/sistema/usuarios";
+import Saccesos from "./pages/modules/sistema/accesos";
 
 
 function RequiredAuth({ children }) {
@@ -50,6 +53,10 @@ export function Navigation() {
                         <Route path="volumen" element={<PiVolumen />} />
                         <Route path="agua" element={<PiCalidad/>}/>
                     </Route>
+                </Route>
+                <Route path="sistema" element={<SIndex/>}>
+                    <Route path="usuarios" element={<Susuarios/>}/>
+                    <Route path="accesos" element={<Saccesos/>}/>
                 </Route>
             </Route>
             <Route path="/login" element={<Login />} />

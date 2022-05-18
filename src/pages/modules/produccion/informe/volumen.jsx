@@ -16,6 +16,8 @@ import ChartJs from "@/components/chart";
 const turn = [1, 2, 3]
 const columns = [
     { field: 'fecha', headerName: 'Fecha', width: 150, valueGetter: (params) => `${new Date(params.row.turn.start_date).toLocaleDateString()}` || '' },
+    { field: 'turno', headerName: 'Turno', width: 170, valueGetter: (params) => `${params.row.turn.turn || ''}` },
+    { field: 'operador', headerName: 'Operador', width: 170, valueGetter: (params) => `${params.row.turn.user.username || ''}` },
     { field: 'tanque_name', headerName: 'Tanque', width: 170, valueGetter: (params) => `${params.row.tank.name || ''}` },
     { field: 'tanque_type', headerName: 'Tipo de agua', width: 170, valueGetter: (params) => `${params.row.tank.water || ''}` },
     { field: 'vol', headerName: 'Volumen', width: 170 }

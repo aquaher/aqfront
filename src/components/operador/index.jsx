@@ -1,5 +1,5 @@
 import { getTurnById,registerTurn,endTurnAndCreate } from "@/api/turn";
-import { getUserByOperator, registerOperator } from "@/api/user";
+import { getUserByOperator } from "@/api/user";
 import { useAuth, useSession } from "@/auth/AuthProvider";
 import { selectTurn, setTurn } from "@/reducer/turn";
 import { Save } from "@mui/icons-material";
