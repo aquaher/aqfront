@@ -1,39 +1,39 @@
-import { getMedidoresByTurnId, putRegisterMedidores, setRegisterMedidores } from "@/api/medidores";
+import { getMedidoresByTurnId, putRegisterMedidores, setRegisterMedidores, getMeasureByDay } from "@/api/medidores";
 import HeaderTurn from "@/components/operador/headerTurn";
 import { selectTurn } from "@/reducer/turn";
 import { AlertSwal } from "@/service/sweetAlert";
-import { Paper, Stack, Typography, TextField, Button } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { Paper, Stack, Typography, TextField, Button, TableContainer, TableHead, TableRow, TableCell, TableBody, IconButton, Table } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
+const model = {
+    measurement_time: '',
+    measurement_channel: 0,
+    reading_kwh_1: 0,
+    reading_kvarh_8: 0,
+    reading_kwh_13: 0,
+    reading_kvarh_14: 0
+}
 export default function Medidor() {
     const { turn } = useSelector(selectTurn)
     const [edit, setEdit] = useState(false);
     const [medidores, setMedidores] = useState({
-        measurement_time: '',
-        measurement_channel: 0,
-        reading_kwh_1: 0,
-        reading_kvarh_8: 0,
-        reading_kwh_13: 0,
-        reading_kvarh_14: 0,
+        ...model,
         turn: turn
     });
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         (async () => {
-            const res = await getMedidoresByTurnId({ turn_id: turn.id })
-            
+            try {
+                const data = await getMeasureByDay();
+                if (data) {
+                    setData(data)
+                }
+            } catch (error) {
 
-            if(res){
-                setEdit(true)
-                setMedidores({
-                    ...res
-                })
             }
-            /*setEdit(res == null)
-            setMedidores({
-                ...res
-            })*/
+
         })()
     }, []);
 
@@ -48,7 +48,7 @@ export default function Medidor() {
             icon: 'question',
             preConfirm: async () => {
                 try {
-                    let res=null;
+                    let res = null;
                     if (!edit) {
                         res = await setRegisterMedidores(medidores);
                         if (!res) {
@@ -59,9 +59,13 @@ export default function Medidor() {
                         if (!res) {
                             throw new Error('Lo sentimos algo paso');
                         }
+                        setEdit(false)
                     }
-                    setEdit(true);
-                    setMedidores({...res})
+                    setMedidores({ ...model, turn: turn })
+                    const data = await getMeasureByDay();
+                    if (data) {
+                        setData(data)
+                    }
                 } catch (error) {
                     AlertSwal.showValidationMessage(error);
                 }
@@ -72,11 +76,16 @@ export default function Medidor() {
                 AlertSwal.fire({
                     title: 'Su registro se proceso con éxito',
                     confirmButtonText: 'Aceptar',
-
                 })
             }
         });
     }
+
+    function editar(e) {
+        setEdit(true)
+        setMedidores({ ...e })
+    }
+
     return (
         <Stack spacing={2}>
             <HeaderTurn turn={turn} title={'Turno de registro de medidores'} />
@@ -103,6 +112,48 @@ export default function Medidor() {
                                 <Button variant='contained' color='secondary' onClick={registrar}>Editar</Button>}
                         </Stack>
                     </Stack>
+                </Paper>
+            </Stack>
+            <Stack>
+                <Paper elevation={10} sx={{ p: 2 }}>
+                    <TableContainer >
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>turno</TableCell>
+                                    <TableCell>operador</TableCell>
+                                    <TableCell>Hora de medición</TableCell>
+                                    <TableCell>Canal</TableCell>
+                                    <TableCell>Lectura Kwh 1</TableCell>
+                                    <TableCell>Lectura Kvarh 8</TableCell>
+                                    <TableCell>Lectura Kwh 13</TableCell>
+                                    <TableCell>Lectura Kvarh 14</TableCell>
+                                    <TableCell>Opciones</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {data.map((el, idx) => {
+                                    return (
+                                        <TableRow key={idx}>
+                                            <TableCell>{el.turn.turn}</TableCell>
+                                            <TableCell>{el.turn.user.username}</TableCell>
+                                            <TableCell>{el.measurement_time}</TableCell>
+                                            <TableCell>{el.measurement_channel} </TableCell>
+                                            <TableCell>{el.reading_kwh_1}</TableCell>
+                                            <TableCell>{el.reading_kvarh_8}</TableCell>
+                                            <TableCell>{el.reading_kwh_13}</TableCell>
+                                            <TableCell>{el.reading_kvarh_14}</TableCell>
+                                            <TableCell>
+                                                <IconButton onClick={e => editar(el)} color='warning'>
+                                                    <Edit />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </Paper>
             </Stack>
         </Stack>

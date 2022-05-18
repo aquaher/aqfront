@@ -15,7 +15,7 @@ export default function CoIndex() {
     const dispatch = useDispatch();
     const turn = useSelector(selectTurn);
     const [operarios, setOperarios] = useState([]);
-    const [optOperador, setOptOperador] = useState();
+    const [optOperador, setOptOperador] = useState('Selecciona aquí');
     const {signOut} = useAuth();
     //TODO valida que si no existe el start date que registre el incio de turno 
     //TODO valida que si existe start_date no haga nada mas y pueda usar el sistemas
@@ -31,23 +31,28 @@ export default function CoIndex() {
 
     }, [dispatch])
     async function finalizeTurn(e) { 
-        try {
-            const nextOp = operarios.find(el=>el.username == optOperador);
-            
-            await endTurnAndCreate({turn_id:turn.turn.id,user_id:nextOp.id});
+        if(optOperador=='Selecciona aquí'){
             AlertSwal.fire({
-                title:'Finalizando el turno',
-                confirmButtonText:'Salir',
-                text:'¡Saludos, nos veremos mañana!',
-                preConfirm:async()=>{
-                    await signOut();
-                }
+                title:'Tienes que seleccionar un operador'
             })
-            
-        } catch (error) {
-            
-        }
-        
+        }else {
+            try {
+                const nextOp = operarios.find(el=>el.username == optOperador);
+                
+                await endTurnAndCreate({turn_id:turn.turn.id,user_id:nextOp.id});
+                AlertSwal.fire({
+                    title:'Finalizando el turno',
+                    confirmButtonText:'Salir',
+                    text:'¡Saludos, nos veremos mañana!',
+                    preConfirm:async()=>{
+                        await signOut();
+                    }
+                })
+                
+            } catch (error) {
+                
+            }
+        }        
     }
     if (turn.loading) return <Skeleton />;
     return (
@@ -58,6 +63,7 @@ export default function CoIndex() {
                         <Typography fontSize={18} fontWeight='bold'>Selecciona el operador a pasar el turno</Typography>
 
                         <Select value={optOperador || ''} onChange={(e) => setOptOperador(e.target.value)}>
+                            <MenuItem value='Selecciona aquí' >Selecciona aquí</MenuItem>
                             {operarios.map((v, idx) => <MenuItem value={v.username} key={idx}>{v.username}</MenuItem>)}
                         </Select>
                         <Button onClick={finalizeTurn} variant='contained' color='error'>Finalizar el Turno</Button>

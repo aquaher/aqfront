@@ -1,11 +1,13 @@
-import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, } from "chart.js";
+import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement,LineElement} from "chart.js";
 import { useState } from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 
 Chart.register(
   CategoryScale,
   LinearScale,
+  PointElement,
   BarElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
@@ -26,5 +28,6 @@ export default function ChartJs({data,title,type}){
     });
 
     if (type == 'GRÁFICO DE BARRAS') return  <Bar options={opt} data={data}/>
+    if (type == 'GRÁFICO DE LINEAS') return  <Line options={opt} data={data}/>
     return null;
 }
