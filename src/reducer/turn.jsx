@@ -29,10 +29,5 @@ export const turnSlice = createSlice({
     }
 });
 export const { setTurn,setTurnError } = turnSlice.actions;
-export const setTurnAsyn = (turn) => (dispatch) => {
-    setTimeout(() => {
-        dispatch(setTurn(turn))
-    }, 3000)
-}
 export const selectTurn = (state) => state.turn;
 export default turnSlice.reducer;
