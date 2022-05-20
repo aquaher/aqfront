@@ -170,7 +170,6 @@ export default function Saccesos() {
                     </Stack>
                 </Stack>
             </Paper>
-            <Button onClick={()=>selected.map(el=>console.log(menu.find(e=>e.id==el)))}>Prueba</Button>
             <CSIndex menu={menu_convert} original={menu}/>
         </Stack>
     );
@@ -203,31 +202,6 @@ function EnhancedTableHead(props) {
     );
 }
 
-function HeadTableSelected(props){
-    const { onSelectAllClick, numSelected, rowCount } =
-        props;
-
-        return (
-            <TableHead>
-                <TableRow>
-                    <TableCell padding="checkbox">
-                        <Checkbox
-                            color="primary"
-                            indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={rowCount > 0 && numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                            inputProps={{
-                                'aria-label': 'select all desserts',
-                            }}
-                        />
-                    </TableCell>
-
-                    <TableCell>Titulo</TableCell>
-                </TableRow>
-            </TableHead>
-        );
-}
-
 
 function hasChildren(nav) {
     return !(nav.length == 1);
@@ -246,6 +220,7 @@ function multiItem(data, item, nav) {
 }
 function singleItem(data, item) {
     data.push({
+        id: item.id,
         name: item.module,
         icon: item.icon,
         path: '/' + item.path,
