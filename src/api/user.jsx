@@ -1,6 +1,8 @@
 import { instance } from "@/service/instance";
 
 const path = '/users';
+const getUsersFetcher = url =>instance.get(path + url).then(res => res.data)
+
 
 async function getUsers() {
     const { data } = await instance.get(path);
@@ -14,5 +16,6 @@ async function getUserByOperator() {
 
 export {
     getUserByOperator,
-    getUsers
+    getUsers,
+    getUsersFetcher
 }
