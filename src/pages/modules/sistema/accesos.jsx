@@ -1,17 +1,19 @@
+import { listAcces, postCreatePermission, deletePermission } from "@/api/access";
 import { getListMenu } from "@/api/menu";
 import { getUsers } from "@/api/user";
-import CSIndex from "@/components/sistema";
+import { AlertSwal } from "@/service/sweetAlert";
 import { KeyboardArrowDown, KeyboardArrowUp, Shield } from "@mui/icons-material";
 import { Paper, Skeleton, Stack, Table, TableCell, TableHead, TableRow, TableBody, TableContainer, IconButton, Tooltip, Checkbox, TablePagination, Box, Grid, Collapse, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export default function Saccesos() {
     const [users, setUsers] = useState();
-    const [menu, setMenu] = useState();
+    const [menu, setMenu] = useState([]);
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [menu_convert, setMenuConvert] = useState([]);
+    const [user, setUser] = useState();
+    const [oldAcces, setOldAccess] = useState([]);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -24,7 +26,6 @@ export default function Saccesos() {
     const handleClick = (event, id) => {
         const selectedIndex = selected.indexOf(id);
         let newSelected = [];
-
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
@@ -61,12 +62,6 @@ export default function Saccesos() {
             const menu_list = await getListMenu();
             if (menu_list) {
                 setMenu(menu_list);
-                let data = [];
-                menu_list.map(element => {
-                    let nav = element.path.split('/');
-                    codeMenu(data, element, nav)
-                })
-                setMenuConvert(data);
             }
             const list_users = await getUsers();
             if (list_users) {
@@ -74,6 +69,93 @@ export default function Saccesos() {
             }
         })()
     }, []);
+    async function getPermission(e, user) {
+        const acceso = await listAcces({ user_id: user.id });
+        if (acceso) {
+            let per = [];
+            acceso.map(value => per.push(value.menu.id));
+            setOldAccess(acceso)
+            setSelected(per);
+            setUser(user)
+        }
+    }
+    async function postPermission(e) {
+        if (!user) {
+            AlertSwal.fire({
+                title: 'Debes seleccionar un usuario',
+                icon:'error'
+            })
+        } else {
+            AlertSwal.fire({
+                title: `¿Estas seguro de actualizar el acceso de ${user.username}?`,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+                showLoaderOnConfirm: true,
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                icon: 'question',
+                preConfirm: async () => {
+                    try {
+                        let acceso = [];
+                        selected.map((id) => {
+                            let element = menu.find(m => m.id == id);
+                            let pare = element.path.split('/');
+                            if (pare.length > 1) {
+                                pare.map(r => {
+                                    let parent = menu.find(v => v.icon == r);
+                                    if (selected.indexOf(parent.id) === -1) {
+                                        acceso.push({
+                                            menu: parent,
+                                            user: user
+                                        });
+                                    }
+                                })
+                            }
+                            acceso.push({
+                                menu: element,
+                                user: user
+                            })
+                        });
+                        oldAcces.map(async item => {
+                            if (selected.indexOf(item.menu.id) === -1) {
+                                await deletePermission({ id: item.id })
+                            }
+                        })
+                        acceso.map(async item => {
+                            if (!oldAcces.find(e => e.menu.id == item.menu.id)) {
+                                await postCreatePermission(item)
+                            }
+                        })
+
+                    } catch (error) {
+                        AlertSwal.showValidationMessage(error);
+                    }
+                },
+                allowOutsideClick: () => !AlertSwal.isLoading()
+            }).then(res => {
+                if (res.isConfirmed) {
+                    AlertSwal.fire({
+                        title: 'El acceso a este usuario se modificó con éxito',
+                        confirmButtonText: 'Aceptar',
+                        preConfirm: async () => {
+                            try {
+                                const acc = await listAcces({ user_id: user.id });
+                                if (acc) {
+                                    let per = [];
+                                    acc.map(value => per.push(value.menu.id));
+                                    setOldAccess(acc)
+                                    setSelected(per);
+                                }
+                            } catch (error) {
+
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+    }
     if (!users) return (
         <>
             <Skeleton />
@@ -86,91 +168,91 @@ export default function Saccesos() {
     return (
         <Stack>
             <Paper elevation={10} sx={{ p: 2 }}>
-                <Stack direction={{ xs: 'column', sm: 'row' }}
-                    spacing={{ xs: 1, sm: 2, md: 4 }}>
-                    <TableContainer>
-                        <Table sx={{ minWidth: 300 }} >
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Nombre de usuario</TableCell>
-                                    <TableCell>Rol de usuario</TableCell>
-                                    <TableCell>Opciones</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {users.map((user, idx) => {
-                                    return (
-                                        <TableRow key={idx}>
-                                            <TableCell>{user.username}</TableCell>
-                                            <TableCell>{user.type}</TableCell>
-                                            <TableCell >
-                                                <Tooltip title='Permisos'>
-                                                    <IconButton>
-                                                        <Shield htmlColor="#2A4DEB" />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <Stack>
+                <Stack spacing={2}>
+                    <Stack direction={{ xs: 'column', sm: 'row' }}
+                        spacing={{ xs: 1, sm: 2, md: 4 }}>
                         <TableContainer sx={{ maxHeight: 440 }}>
-                            <Table sx={{ minWidth: 400 }}>
-                                <EnhancedTableHead
-                                    numSelected={selected.length}
-                                    onSelectAllClick={handleSelectAllClick}
-                                    rowCount={menu.length}
-                                />
+                            <Table sx={{ minWidth: 300 }} >
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Nombre de usuario</TableCell>
+                                        <TableCell>Rol de usuario</TableCell>
+                                        <TableCell>Opciones</TableCell>
+                                    </TableRow>
+                                </TableHead>
                                 <TableBody>
-                                    {menu.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((el, idx) => {
-
-                                        const isItemSelected = isSelected(el.id);
-                                        const labelId = `enhanced-table-checkbox-${idx}`;
+                                    {users.map((user, idx) => {
                                         return (
-                                            <TableRow
-                                                hover
-                                                onClick={(event) => handleClick(event, el.id)}
-                                                role="checkbox"
-                                                aria-checked={isItemSelected}
-                                                tabIndex={-1}
-                                                key={idx}
-                                                selected={isItemSelected}>
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={isItemSelected}
-                                                        inputProps={{
-                                                            'aria-labelledby': labelId,
-                                                        }}
-                                                    />
+                                            <TableRow key={idx}>
+                                                <TableCell>{user.username}</TableCell>
+                                                <TableCell>{user.type}</TableCell>
+                                                <TableCell >
+                                                    <Button onClick={e => getPermission(e, user)} startIcon={<Shield />} variant='contained' color='primary'>Permisos</Button>
                                                 </TableCell>
-                                                <TableCell>{el.module}</TableCell>
-                                                <TableCell>{el.title}</TableCell>
                                             </TableRow>
                                         );
                                     })}
-
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        <TablePagination
-                            labelRowsPerPage='Filas por página'
-                            rowsPerPageOptions={[5, 10, 25]}
-                            component="div"
-                            count={menu.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}>
+                        <Stack>
+                            <TableContainer sx={{ maxHeight: 440 }}>
+                                <Table sx={{ minWidth: 400 }}>
+                                    <EnhancedTableHead
+                                        numSelected={selected.length}
+                                        onSelectAllClick={handleSelectAllClick}
+                                        rowCount={menu.length}
+                                    />
+                                    <TableBody>
+                                        {menu.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((el, idx) => {
 
-                        </TablePagination>
+                                            const isItemSelected = isSelected(el.id);
+                                            const labelId = `enhanced-table-checkbox-${idx}`;
+                                            return (
+                                                <TableRow
+
+                                                    hover
+                                                    onClick={(event) => handleClick(event, el.id)}
+                                                    role="checkbox"
+                                                    aria-checked={isItemSelected}
+                                                    tabIndex={-1}
+                                                    key={idx}
+                                                    selected={isItemSelected}>
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            color="primary"
+                                                            checked={isItemSelected}
+                                                            inputProps={{
+                                                                'aria-labelledby': labelId,
+                                                            }}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell>{el.title}</TableCell>
+                                                    <TableCell>{el.path.toUpperCase()}</TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                labelRowsPerPage='Filas por página'
+                                rowsPerPageOptions={[5, 10, 25, 50]}
+                                component="div"
+                                count={menu.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}>
+                            </TablePagination>
+                        </Stack>
+                    </Stack>
+                    <Stack alignItems='center'>
+                        <Button variant="contained" onClick={postPermission}>Guardar accesos</Button>
                     </Stack>
                 </Stack>
             </Paper>
-            <CSIndex menu={menu_convert} original={menu}/>
+
         </Stack>
     );
 }
@@ -195,37 +277,10 @@ function EnhancedTableHead(props) {
                         }}
                     />
                 </TableCell>
-                <TableCell>Modulo</TableCell>
                 <TableCell>Titulo</TableCell>
+                <TableCell>Path</TableCell>
             </TableRow>
         </TableHead>
     );
-}
-
-
-function hasChildren(nav) {
-    return !(nav.length == 1);
-}
-function codeMenu(data, item, nav) {
-
-    if (hasChildren(nav)) {
-        multiItem(data.find(e => e.icon == nav[0]), item, nav);
-    } else {
-        singleItem(data, item)
-    }
-}
-function multiItem(data, item, nav) {
-    nav.shift()
-    codeMenu(data.items, item, nav)
-}
-function singleItem(data, item) {
-    data.push({
-        id: item.id,
-        name: item.module,
-        icon: item.icon,
-        path: '/' + item.path,
-        title: item.title,
-        items: []
-    })
 }
 
