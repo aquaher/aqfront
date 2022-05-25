@@ -1,9 +1,9 @@
-import { instance } from "@/service/instance";
+import { instance, instanceAdmin } from "@/service/instance";
 
 const path = '/users';
 const getUsersFetcher = url =>instance.get(path + url).then(res => res.data)
-
-
+const getUsersKeycloak = url => instanceAdmin.get(url).then(res=>res.data)
+const setUserKeycloak = (url,data) => instanceAdmin.post(url,data).then(res=>res.data)
 async function getUsers() {
     const { data } = await instance.get(path);
     return data;
@@ -17,5 +17,7 @@ async function getUserByOperator() {
 export {
     getUserByOperator,
     getUsers,
-    getUsersFetcher
+    getUsersFetcher,
+    getUsersKeycloak,
+    setUserKeycloak
 }
