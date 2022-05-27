@@ -3,49 +3,71 @@ import HeaderTurn from "@/components/operador/headerTurn";
 import { selectEvents } from "@/reducer/events";
 import { selectTurn } from "@/reducer/turn";
 import { AlertSwal } from "@/service/sweetAlert";
-import { Box, Paper, Stack, Typography, Input, TextareaAutosize, TextField, Select, MenuItem, Button, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import { Box, Paper, Stack, Typography, Input, TextareaAutosize, TextField, Select, MenuItem, Button, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import useSWR from "swr";
 
 const Registros = () => {
     const { data, error } = useSWR('/rangue', bitacora.get)
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
     if (error) return <Stack>Lo sentimos ocurrio un error</Stack>
     if (!data) return <Skeleton />
-    
+
     return (
-        <TableContainer>
-            <Table sx={{ minWidth: 350 }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Turno</TableCell>
-                        <TableCell>Descripción</TableCell>
-                        <TableCell>Evento</TableCell>
-                        <TableCell>Sección</TableCell>
-                        <TableCell>Hora de inicio</TableCell>
-                        <TableCell>Hora de finalización</TableCell>
-                        <TableCell>Usuario</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data.map((value, idx) => {
-                        return (
-                            <TableRow key={idx}>
-                                <TableCell>{value.turn.turn}</TableCell>
-                                <TableCell>
-                                    <TextField multiline value={value.description} maxRows={3}/>
-                                </TableCell>
-                                <TableCell>{value.event.name}</TableCell>
-                                <TableCell>{value.section}</TableCell>
-                                <TableCell>{value.start_time}</TableCell>
-                                <TableCell>{value.end_time}</TableCell>
-                                <TableCell>{value.turn.user.username}</TableCell>
-                            </TableRow>
-                        )
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Stack>
+            <TableContainer sx={{ maxHeight: 440 }}>
+                <Table sx={{ minWidth: 450 }}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Turno</TableCell>
+                            <TableCell>Descripción</TableCell>
+                            <TableCell>Evento</TableCell>
+                            <TableCell>Sección</TableCell>
+                            <TableCell>Hora de inicio</TableCell>
+                            <TableCell>Hora de finalización</TableCell>
+                            <TableCell>Usuario</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((value, idx) => {
+                            return (
+                                <TableRow key={idx}>
+                                    <TableCell>{value.turn.turn}</TableCell>
+                                    <TableCell>
+                                        <TextField multiline value={value.description} maxRows={3} />
+                                    </TableCell>
+                                    <TableCell>{value.event.name}</TableCell>
+                                    <TableCell>{value.section}</TableCell>
+                                    <TableCell>{value.start_time}</TableCell>
+                                    <TableCell>{value.end_time}</TableCell>
+                                    <TableCell>{value.turn.user.username}</TableCell>
+                                </TableRow>
+                            )
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                labelRowsPerPage='Filas por página'
+                rowsPerPageOptions={[5, 10, 25, 50]}
+                component="div"
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}>
+            </TablePagination>
+        </Stack>
     );
 }
 
@@ -146,7 +168,7 @@ export default function Bitacora() {
             </Stack>
             <Stack alignItems='center' spacing={2}>
                 <Paper>
-                    <Registros/>
+                    <Registros />
                 </Paper>
             </Stack>
         </Stack>
