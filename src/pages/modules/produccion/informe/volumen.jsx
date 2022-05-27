@@ -156,7 +156,7 @@ export default function PiVolumen() {
                 });
             }
         } catch (error) {
-            console.log(error)
+            
             setIsLoad(false);
         }
         setIsLoad(false);

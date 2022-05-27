@@ -22,14 +22,14 @@ const Formulario = ({groups}) => {
         let newVal = {...value,groups:[value.groups]}
         try {
             await setUserKeycloak('/users',newVal)
-            console.log('creado')
+            
             const up = await getUserByUsernameKeycloak('/users',value.username);
-            console.log(up)
+            
             const p = await getUsersKeycloak(`/users/${up[0].id}/groups`);
-            console.log(p)
+            
             ///groups/{groupId} delete
         } catch (error) {
-            console.log(error)
+            
         }
     }
     return (
@@ -84,7 +84,7 @@ export default function Susuarios() {
 
 
     //realmRoles
-    console.log(groups)
+    
     const [open, setOpen] = useState(false);
     if (error) return <Stack>Recarga la página</Stack>
     if (!users) return (
@@ -99,7 +99,7 @@ export default function Susuarios() {
 
     async function createUser(e) {
 
-        console.log(e)
+        
         //const prueba = await getUsersKeycloak('/users');
         //console.log(prueba)
     }
@@ -164,7 +164,7 @@ export default function Susuarios() {
                                                     <Tooltip title="Ligar acceso un empleado">
                                                         <IconButton onClick={async(v)=>{
                                                             try {
-                                                                console.log(e.id)
+                                                                
                                                                 await deleteUsersKeycloak(`/users/${e.id}`);
                                                             } catch (error) {
                                                                 
