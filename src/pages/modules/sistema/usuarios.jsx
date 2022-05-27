@@ -1,9 +1,9 @@
-import { getUsersFetcher, getUsersKeycloak, setUserKeycloak, getGroupsKeycloak,getUserByUsernameKeycloak,deleteUsersKeycloak } from "@/api/user";
 import { Edit, Password, PersonAdd, PersonAddDisabled, PersonSearch } from "@mui/icons-material";
 import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, MenuItem, Paper, Select, Skeleton, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import useSWR from "swr"
 import { Formik, Form, useFormik } from 'formik';
+import keycloak from "@/api/keycloak";
 
 const Formulario = ({groups}) => {
     const formik = useFormik({
@@ -21,11 +21,11 @@ const Formulario = ({groups}) => {
     async function handleSubmit(value){
         let newVal = {...value,groups:[value.groups]}
         try {
-            await setUserKeycloak('/users',newVal)
+            //await setUserKeycloak('/users',newVal)
             
-            const up = await getUserByUsernameKeycloak('/users',value.username);
+            //const up = await getUserByUsernameKeycloak('/users',value.username);
             
-            const p = await getUsersKeycloak(`/users/${up[0].id}/groups`);
+            //const p = await getUsersKeycloak(`/users/${up[0].id}/groups`);
             
             ///groups/{groupId} delete
         } catch (error) {
@@ -78,11 +78,11 @@ const Formulario = ({groups}) => {
 }
 
 export default function Susuarios() {
-    const { data: users, error } = useSWR('/users', getUsersKeycloak);
-    const { data: groups } = useSWR('/groups', getGroupsKeycloak);
+    const { data: users, error } = useSWR('/users', keycloak.get);
+    const { data,error:err } = useSWR({url:'/groups',data:{params:{clientId:import.meta.env.VITE_CLIENT_ID}}}, keycloak.getBy);
     const [group, setGroup] = useState('selecciona un grupo');
 
-
+    console.log(data)
     //realmRoles
     
     const [open, setOpen] = useState(false);
@@ -165,7 +165,7 @@ export default function Susuarios() {
                                                         <IconButton onClick={async(v)=>{
                                                             try {
                                                                 
-                                                                await deleteUsersKeycloak(`/users/${e.id}`);
+                                                                //await deleteUsersKeycloak(`/users/${e.id}`);
                                                             } catch (error) {
                                                                 
                                                             }
@@ -188,7 +188,7 @@ export default function Susuarios() {
                 <DialogTitle>Creación de nuevo usuario</DialogTitle>
                 <DialogContent>
                     <Stack spacing={1}>
-                        <Formulario groups={groups} />
+                        
                     </Stack>
                 </DialogContent>
             </Dialog>

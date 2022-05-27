@@ -13,7 +13,7 @@ export default function PoVolumen() {
     const { turn } = useSelector(selectTurn);
     const { value } = useSelector(selectTank);
     const [isEdit, setIsEdit] = useState(false);
-    const [isLoad, setLoad] = useState(true);
+    const [isLoad, setLoad] = useState(false);
     const [optTank, setOptTank] = useState('TQ-1');
     const [volumen, setVolumen] = useState({
         vol: 0,
@@ -22,18 +22,7 @@ export default function PoVolumen() {
     });
 
     useEffect(() => {
-        (async () => {
-            try {
-                const res = await getVolumenByTurnAndTank({ tank_id: 1, turn_id: turn.id });
-                if (res) {
-                    setIsEdit(true)
-                    setVolumen(res)
-                }
-            } catch (error) {
-                setIsEdit(false)
-            }
-            setLoad(false);
-        })()
+        
     }, []);
 
     async function registrar(e) {
@@ -123,7 +112,7 @@ export default function PoVolumen() {
                             {value ? value.map((tanque) => <MenuItem key={tanque.id} value={tanque.name}>{tanque.name}</MenuItem>) : null}
                         </Select>
                         <LoadingButton variant='contained' loading={isLoad} startIcon={<Repeat />} onClick={reload}>
-                            Cargar
+                            Verificar
                         </LoadingButton>
                     </Stack>
                 </Paper>

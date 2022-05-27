@@ -8,8 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import useSWR from "swr";
 
-const Registros = ({ turn }) => {
-    const { data, error } = useSWR({ url: '/rangue', data: { params: { turn: turn } } }, bitacora.getByData)
+const Registros = () => {
+    const { data, error } = useSWR('/rangue', bitacora.get)
     if (error) return <Stack>Lo sentimos ocurrio un error</Stack>
     if (!data) return <Skeleton />
     
@@ -18,7 +18,7 @@ const Registros = ({ turn }) => {
             <Table sx={{ minWidth: 350 }}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>#</TableCell>
+                        <TableCell>Turno</TableCell>
                         <TableCell>Descripción</TableCell>
                         <TableCell>Evento</TableCell>
                         <TableCell>Sección</TableCell>
@@ -31,7 +31,7 @@ const Registros = ({ turn }) => {
                     {data.map((value, idx) => {
                         return (
                             <TableRow key={idx}>
-                                <TableCell>{idx+1}</TableCell>
+                                <TableCell>{value.turn.turn}</TableCell>
                                 <TableCell>
                                     <TextField multiline value={value.description} maxRows={3}/>
                                 </TableCell>
@@ -146,7 +146,7 @@ export default function Bitacora() {
             </Stack>
             <Stack alignItems='center' spacing={2}>
                 <Paper>
-                    <Registros turn={turn.turn} />
+                    <Registros/>
                 </Paper>
             </Stack>
         </Stack>
