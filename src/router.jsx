@@ -19,6 +19,7 @@ import PiCalidad from "./pages/modules/produccion/informe/calidad";
 import SIndex from "./pages/modules/sistema";
 import Susuarios from "./pages/modules/sistema/usuarios";
 import Saccesos from "./pages/modules/sistema/accesos";
+import PiProduccion from "./pages/modules/produccion/informe/produccion";
 
 
 function RequiredAuth({ children }) {
@@ -52,6 +53,7 @@ export function Navigation() {
                         <Route path="medidor" element={<PiMedidor />} />
                         <Route path="volumen" element={<PiVolumen />} />
                         <Route path="agua" element={<PiCalidad/>}/>
+                        <Route path="produccion_total" element={<PiProduccion/>}/>
                     </Route>
                 </Route>
                 <Route path="sistema" element={<SIndex/>}>

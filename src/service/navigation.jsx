@@ -1,4 +1,4 @@
-import { AdminPanelSettings, AppRegistration, AssignmentInd, Dashboard, EnergySavingsLeaf, EngineeringOutlined, Factory, GppGood, SupervisedUserCircle, TurnedIn, VerifiedUser, Water, WaterDamage, WaterfallChart, WaterfallChartRounded, WaterOutlined } from "@mui/icons-material";
+import { AdminPanelSettings, AppRegistration, AssignmentInd, Dashboard, EnergySavingsLeaf, EngineeringOutlined, Factory, GppGood, ProductionQuantityLimits, SupervisedUserCircle, TurnedIn, VerifiedUser, Water, WaterDamage, WaterfallChart, WaterfallChartRounded, WaterOutlined } from "@mui/icons-material";
 import { Trabajador } from "@/components/icons/trabajajdor";
 import { ChartAreasPline } from "@/components/icons/chart_areaspline";
 import { WaterCircle } from "@/components/icons/water_cricle";
@@ -73,5 +73,9 @@ export const menu = [
     {
         name:'accesos',
         icon: <VerifiedUser/>,
+    },
+    {
+        name:'produccion_total',
+        icon: <ProductionQuantityLimits/>,
     }
 ]

@@ -80,20 +80,29 @@ export default function PoVolumen() {
         try {
             const res = await getVolumenByTurnAndTank({ tank_id: value.find(e => e.name == optTank).id, turn_id: turn.id });
             if (res) {
-                setIsEdit(true)
-                setVolumen(res)
+                AlertSwal.fire({
+                    title: 'El volumen ya esta registrado,ahora puedes editarlo.',
+                    confirmButtonText: 'Aceptar',
+                    preConfirm:()=>{
+                        setIsEdit(true)
+                        setVolumen(res)
+                    }
+                })
+                
+            }else{
+                AlertSwal.fire({
+                    title: 'No existen datos en este tanque,¡Registralos ahora!',
+                    confirmButtonText: 'Aceptar',
+                })
+                setVolumen({
+                    vol: 0,
+                    turn: null,
+                    tank: null
+                })
+                setIsEdit(false)
             }
         } catch (error) {
-            AlertSwal.fire({
-                title: 'No existen datos en este tanque,¡Registralos ahora!',
-                confirmButtonText: 'Aceptar',
-            })
-            setVolumen({
-                vol: 0,
-                turn: null,
-                tank: null
-            })
-            setIsEdit(false)
+            
         }
         
         setLoad(false);

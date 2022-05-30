@@ -302,9 +302,9 @@ export default function PiVolumen() {
                         <Grid item xs={4} sm={6} md={3}>
                             <Stack alignItems='center' spacing={1}>
                                 <Typography fontWeight='bold'>Selecciona el tanque</Typography>
-                                <Select value={selection} onChange={e => setSelection(e.target.value)}>
+                                <Select value={selection} onChange={e => setSelection(e.target.value)} sx={{maxWidth:250}}>
                                     <MenuItem value={'TODOS'}>TODOS</MenuItem>
-                                    {value.map((tank, idx) => <MenuItem key={idx} value={tank.name}>{tank.name} {tank.water.split('AGUA')[1]}</MenuItem>)}
+                                    {value.map((tank, idx) => <MenuItem key={idx} value={tank.name}>{tank.name} {tank.water}</MenuItem>)}
                                 </Select>
                             </Stack>
                         </Grid>
