@@ -118,7 +118,7 @@ export default function PoVolumen() {
                         </Stack>
                         <Typography fontWeight='bold'>Selecciona el tanque a registrar</Typography>
                         <Select value={optTank} onChange={e => setOptTank(e.target.value)}>
-                            {value ? value.map((tanque) => <MenuItem key={tanque.id} value={tanque.name}>{tanque.name}</MenuItem>) : null}
+                            {value ? value.map((tanque) => <MenuItem key={tanque.id} value={tanque.name}>{tanque.name} {tanque.water}</MenuItem>) : null}
                         </Select>
                         <LoadingButton variant='contained' loading={isLoad} startIcon={<Repeat />} onClick={reload}>
                             Verificar

@@ -1,43 +1,72 @@
+import { water } from "@/api/water";
 import { selectTank } from "@/reducer/tank";
-import { Grid, MenuItem, Paper, Select, Stack, Typography,TextField } from "@mui/material";
+import { AlertSwal } from "@/service/sweetAlert";
+import { Grid, MenuItem, Paper, Select, Stack, Typography,TextField, Button } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { format } from "date-fns";
 import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import { useSelector } from "react-redux";
 
-const turn = [1, 2, 3]
-
 export default function PiProduccion() {
-    const [turno,setTurn] = useState('TODOS');
     const [start_date, setStartDate] = useState(new Date());
     const [end_date, setEndDate] = useState(new Date());
     const {value} = useSelector(selectTank)
     const [selection,setSelection] = useState('TODOS');
-    const [color,setColor] = useState('#94bfa')
+    const [vol,setVol] = useState([0]);
+    //const [color,setColor] = useState('#94bfa');
+    function onClickLoad(e){
+        AlertSwal.fire({
+            title:'¿Estas seguro de cargar el volumen total producido?',
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            icon: 'question',
+            preConfirm: async () => {
+                try {
+                    if(selection=='TODOS'){
+                        const data = await water.getBy({url:'/rangue/todos',data:{params:{startDate:format(start_date,'yyyy-MM-dd'),endDate:format(end_date,'yyyy-MM-dd')}}});
+                        if(data){
+                            setVol(data.map(e=>e.total_produced))
+                        }else{
+                            setVol([0])
+                        }
+                    }else{
+                        const tankID = value.find(e=>e.name==selection).id
+                        const data = await water.getBy({url:'/rangue',data:{params:{tankId:tankID,startDate:format(start_date,'yyyy-MM-dd'),endDate:format(end_date,'yyyy-MM-dd')}}});
+                        if(data){
+                            setVol(data.map(e=>e.total_produced))
+                        }else{
+                            setVol([0])
+                        }
+                    }
+                } catch (error) {
+                    AlertSwal.showValidationMessage(error);
+                }
+                
+            },
+            allowOutsideClick: () => !AlertSwal.isLoading()
+        }).then(q=>{
+
+        })
+    }
     return (
-        <Stack >
+        <Stack alignItems='center'  direction={{ xs: 'column', sm: 'row' }}
+        spacing={{ xs: 1, sm: 2, md: 4 }}>
             <Paper sx={{p:2}} elevation={10}>
-                <Stack spacing={1}>
+                <Stack spacing={1} alignItems='center'>
                     <Stack alignItems='center' pb={2}>
                         <Typography fontWeight='bold' fontSize={20}>INFORME DE PRODUCCIÓN</Typography>
                     </Stack>
-                    <Grid container spacing={1} columns={{ xs: 4, sm: 12, md: 12 }}>
-                        <Grid item xs={4} sm={6} md={3}>
-                            <Stack alignItems='center' spacing={1}>
-                                <Typography fontWeight='bold'>Selecciona el Turno</Typography>
-                                <SelectionTurn turno={turno} setTurn={setTurn}/>
-                            </Stack>
-                        </Grid>
-                        <Grid item xs={4} sm={6} md={3}>
-                            <Stack alignItems='center' spacing={1}>
+                    <Stack  spacing={1}>
                                 <Typography fontWeight='bold'>Selecciona el tanque</Typography>
                                 <Select value={selection} onChange={e => setSelection(e.target.value)} sx={{maxWidth:250}}>
                                     <MenuItem value={'TODOS'}>TODOS</MenuItem>
                                     {value.map((tank, idx) => <MenuItem key={idx} value={tank.name}>{tank.name} {tank.water}</MenuItem>)}
                                 </Select>
                             </Stack>
-                        </Grid>
-                        <Grid item xs={4} sm={6} md={3}>
                             <Stack alignItems='center' spacing={1}>
                             <Typography fontWeight='bold'>Selecciona el rango de fecha</Typography>
                                 <DesktopDatePicker
@@ -56,24 +85,25 @@ export default function PiProduccion() {
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Stack>
-                        </Grid>
-                        <Grid item xs={4} sm={6} md={3}>
-                            <Stack alignItems='center' spacing={1}>
-                                <Typography fontWeight='bold' fontSize={18}>Selecciona el color</Typography>
-                                <HexColorPicker color={color} onChange={setColor} />
-                            </Stack>
-                        </Grid>
-                    </Grid>
+                    <Stack alignItems='center' pb={2}>
+                        <Button onClick={onClickLoad} variant='contained'>Cargar</Button>
+                    </Stack>
+                </Stack>
+            </Paper>
+            <Paper sx={{p:2}} elevation={10}>
+                <Stack alignItems='center'>
+                    <Typography fontSize={40} fontWeight='bold'>Total producido</Typography>
+                    <Typography fontSize={54} fontWeight='bold'>{vol.reduce((a,b)=>a+b,0)}</Typography>
                 </Stack>
             </Paper>
         </Stack>
     )
 }
-function SelectionTurn({turno,setTurn}){
-    return(
-        <Select value={turno} onChange={e=>setTurn(e.target.value)}>
-            <MenuItem value={'TODOS'}>TODOS</MenuItem>
-            {turn.map((e,idx)=><MenuItem key={idx} value={e}>{e}</MenuItem>)}
-        </Select>
-    );
-}
+/**
+ <Grid item xs={4} sm={6} md={3}>
+                            <Stack alignItems='center' spacing={1}>
+                                <Typography fontWeight='bold' fontSize={18}>Selecciona el color</Typography>
+                                <HexColorPicker color={color} onChange={setColor} />
+                            </Stack>
+                        </Grid>
+ */
