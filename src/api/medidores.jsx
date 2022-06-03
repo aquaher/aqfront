@@ -1,5 +1,10 @@
 import { instance } from "@/service/instance";
 const path = '/measure';
+
+const medidor = {
+    get:({url,data})=>instance.get(path+url,data).then(res=>res.data)
+}
+
 async function setRegisterMedidores(medidores){
     const {data} = await instance.post(path,medidores);
     return data;
@@ -26,5 +31,6 @@ export {
     putRegisterMedidores,
     getMedidoresByTurnId,
     getMedidoresByMonth,
-    getMeasureByDay
+    getMeasureByDay,
+    medidor
 }

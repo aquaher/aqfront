@@ -1,10 +1,12 @@
-import { getMedidoresByMonth } from "@/api/medidores";
+import { medidor } from "@/api/medidores";
 import { months } from "@/constant/utils";
+import { AlertSwal } from "@/service/sweetAlert";
 import { Repeat } from "@mui/icons-material";
-import { LoadingButton } from "@mui/lab";
-import { Paper, Stack,Box,Typography,Select,MenuItem } from "@mui/material";
+import { Paper, Stack, Box, Typography, Select, MenuItem, Button, TextField } from "@mui/material";
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { format } from "date-fns";
+import {  useState } from "react";
 
 const columns = [
     { field: 'turno', headerName: 'Fecha', width: 150, valueGetter: (params) => `${params.row.turn.turn}` || '' },
@@ -20,32 +22,50 @@ const columns = [
 
 export default function PiMedidor() {
     const now = new Date();
-    const [date, setDate] = useState(months[now.getMonth()]);
-    const [isLoad,setLoad] = useState(true);
-    const [data,setData] = useState();
+    const [data, setData] = useState([]);
     const [selectionModel, setSelectionModel] = useState([]);
+    const [start_date, setStartDate] = useState(new Date());
+    const [end_date, setEndDate] = useState(new Date());
 
-    useEffect(()=>{
-        (async()=>{
-            const res = await getMedidoresByMonth({number:now.getMonth()})
-            setLoad(false)
-            if(res){
-                setData(res);
+    async function reloadData() {
+        AlertSwal.fire({
+            title: '¿Seguro que deseas cargar los registros de los medidores?',
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            icon: 'question',
+            preConfirm: async () => {
+                try {
+                    let start = format(start_date,'yyyy-MM-dd')
+                    let end = format(end_date,'yyyy-MM-dd')
+                    const register = await medidor.get({url:'/rangue',data:{params:{startDate:start,endDate:end}}})
+                    if (register) {
+                        setData(register)
+                    }else{
+                        setData([])
+                    }
+                } catch (error) {
+                    AlertSwal.showValidationMessage(error);
+                }
+            },
+            allowOutsideClick: () => !AlertSwal.isLoading()
+        }).then((res) => {
+            if (res.isConfirmed) {
+                AlertSwal.fire({
+                    title: 'Se cargaron los datos con éxito',
+                    confirmButtonText: 'Aceptar',
+                    icon:'success'
+                })
             }
-        })()
-    },[])
-    async function reloadData(){
-        const res = await getMedidoresByMonth({number:months.findIndex(e => e == date)+1})
-        setLoad(false)
-        if(res){
-            setData(res);
-        }
+        });
     }
 
     const CustomToolbar = () => {
         return (
             <GridToolbarContainer>
-                <GridToolbarExport variant='contained' />
+                {data.length!=0?<GridToolbarExport variant='contained' />:null}
             </GridToolbarContainer>
         );
     }
@@ -57,19 +77,35 @@ export default function PiMedidor() {
                     <Stack alignItems='center' >
                         <Typography fontWeight='bold' fontSize={20}>INFORME DE MEDIDORES DE LUZ</Typography>
                     </Stack>
+                    <Stack spacing={1}>
+                    <Typography fontWeight='bold' fontSize={18}>Selecciona el Rango:</Typography>
+                        <Box>
+                            <DesktopDatePicker
+                                label="Selecciona la fecha"
+                                inputFormat="MM/dd/yyyy"
+                                value={start_date}
+                                onChange={e => setStartDate(e)}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Box>
+                        <Typography>Hasta</Typography>
+                        <Box>
+                            <DesktopDatePicker
+                                label="Selecciona la fecha"
+                                inputFormat="MM/dd/yyyy"
+                                value={end_date}
+                                onChange={e => setEndDate(e)}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Box>
+                    </Stack>
+
                     <Box>
-                        <Typography fontWeight='bold' fontSize={18}>Selecciona el Mes:</Typography>
-                        <Select value={date} onChange={e => setDate(e.target.value)}>
-                            {months.map((mes, idx) => <MenuItem key={idx} value={mes}>{mes}</MenuItem>)}
-                        </Select>
-                    </Box>
-                    <Box>
-                        <LoadingButton
-                            loading={isLoad}
+                        <Button
                             startIcon={<Repeat />}
                             variant='contained'
                             color='primary'
-                            onClick={reloadData}>Cargar registros</LoadingButton>
+                            onClick={reloadData}>Cargar registros</Button>
                     </Box>
                     {data ? <DataGrid
                         autoHeight
