@@ -1,6 +1,7 @@
 import { useSession } from "@/auth/AuthProvider";
 import CoIndex from "@/components/operador";
 import CvVolumen from "@/components/ventas/CvVolumen";
+import { Stack } from "@mui/material";
 import Vindex from "./modules/ventas/Vindex";
 
 export default function Index() {
@@ -9,7 +10,7 @@ export default function Index() {
     console.log(user.group)
     console.log(user.group=="/admin")
     return (
-        <>
+        <Stack spacing={2}>
             {user.group.map(e=>{
                 if(e=='/operador'){
                     return <CoIndex/>;
@@ -23,6 +24,6 @@ export default function Index() {
                 
                 return null;
             })}
-        </>
+        </Stack>
     );
 }
