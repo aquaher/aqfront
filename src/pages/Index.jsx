@@ -1,5 +1,6 @@
 import { useSession } from "@/auth/AuthProvider";
 import CoIndex from "@/components/operador";
+import CvVolumen from "@/components/ventas/CvVolumen";
 import Vindex from "./modules/ventas/Vindex";
 
 export default function Index() {
@@ -13,9 +14,13 @@ export default function Index() {
                 if(e=='/operador'){
                     return <CoIndex/>;
                 }
+                if(e=='/despachador'){
+                    return <CvVolumen/>
+                }
                 if(e=='/ventas'){
                     return <Vindex/>;
                 }
+                
                 return null;
             })}
         </>

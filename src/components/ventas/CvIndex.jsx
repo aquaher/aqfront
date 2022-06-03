@@ -5,7 +5,6 @@ import CvVolumen from "./CvVolumen";
 export default function CvIndex(){
     return(
         <Stack spacing={2}>
-            <CvVolumen/>
             <CcIndex/>
         </Stack>
         
