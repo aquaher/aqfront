@@ -21,12 +21,12 @@ export default function CoIndex() {
     //TODO valida que si existe start_date no haga nada mas y pueda usar el sistemas
     //TODO VALIDA QUE si otro usuari ingresa no pueda hacer nada si el no esta activo
     useEffect(() => {
+        
         (async () => {
             setOperarios(await getUserByOperator());
         })()
         if (!turn.user) {
             dispatch(getTurnById({ id: user.sub }));
-            dispatch(getEvents());
         }
 
     }, [dispatch])

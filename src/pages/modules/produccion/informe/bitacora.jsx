@@ -1,5 +1,5 @@
 import { bitacora, getRegisterBitacoraByMonth } from "@/api/bitacora";
-import { Edit, Repeat, ViewAgenda } from "@mui/icons-material";
+import { Edit, Repeat, ViewAgenda, Visibility } from "@mui/icons-material";
 import { Box, Button, MenuItem, Dialog, Paper,DialogContent, DialogContentText ,Select, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridToolbar, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -84,7 +84,7 @@ const Registros = ({ start, end }) => {
         const [open,setOpen]=useState(false);
         return(
             <>
-            <Button startIcon={<ViewAgenda/>} onClick={() =>setOpen(true)}>Ver descripción</Button>
+            <Button startIcon={<Visibility/>} onClick={() =>setOpen(true)}>Ver descripción</Button>
             
             <Dialog
                 open={open}
@@ -113,12 +113,13 @@ const Registros = ({ start, end }) => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Turno</TableCell>
+                            <TableCell>Usuario</TableCell>
+                            <TableCell>Fecha</TableCell>
+                            <TableCell>Hora de inicio</TableCell>
                             <TableCell>Descripción</TableCell>
                             <TableCell>Evento</TableCell>
                             <TableCell>Sección</TableCell>
-                            <TableCell>Hora de inicio</TableCell>
                             <TableCell>Hora de finalización</TableCell>
-                            <TableCell>Usuario</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -127,14 +128,15 @@ const Registros = ({ start, end }) => {
                             return (
                                 <TableRow key={idx}>
                                     <TableCell>{value.turn.turn}</TableCell>
+                                    <TableCell>{value.turn.user.username}</TableCell>
+                                    <TableCell>{new Date(value.turn.start_date).toLocaleDateString()}</TableCell>
+                                    <TableCell>{value.start_time}</TableCell>
                                     <TableCell>
                                         <ViewDesc desc={value.description}/> 
                                     </TableCell>
                                     <TableCell>{value.event.name}</TableCell>
                                     <TableCell>{value.section}</TableCell>
-                                    <TableCell>{value.start_time}</TableCell>
                                     <TableCell>{value.end_time}</TableCell>
-                                    <TableCell>{value.turn.user.username}</TableCell>
                                 </TableRow>
                             )
                         })}

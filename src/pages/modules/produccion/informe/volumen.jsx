@@ -1,5 +1,5 @@
 import { selectTank } from "@/reducer/tank";
-import { Box, Grid, Stack, TextField, Typography, Select, MenuItem, Button, Paper } from "@mui/material";
+import { Box, Grid, Stack, TextField, Typography, Select, MenuItem, Button, Paper, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { typo_grafica } from "@/constant/utils";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { useMemo, useState } from "react";
@@ -101,7 +101,7 @@ export default function PiVolumen() {
                                     labels,
                                     datasets: sets
                                 })
-                            }else {
+                            } else {
                                 AlertSwal.fire({
                                     title: `¡Lo sentimos, no existen registros en estas fechas !`,
                                     icon: 'info',
@@ -143,20 +143,20 @@ export default function PiVolumen() {
                                     labels,
                                     datasets: sets
                                 })
-                            }else {
+                            } else {
                                 AlertSwal.fire({
                                     title: `¡Lo sentimos, no existen registros en estas fechas !`,
                                     icon: 'info',
                                 })
                             }
 
-                        } 
+                        }
                     },
                     allowOutsideClick: () => !AlertSwal.isLoading()
                 });
             }
         } catch (error) {
-            
+
             setIsLoad(false);
         }
         setIsLoad(false);
@@ -302,7 +302,7 @@ export default function PiVolumen() {
                         <Grid item xs={4} sm={6} md={3}>
                             <Stack alignItems='center' spacing={1}>
                                 <Typography fontWeight='bold'>Selecciona el tanque</Typography>
-                                <Select value={selection} onChange={e => setSelection(e.target.value)} sx={{maxWidth:250}}>
+                                <Select value={selection} onChange={e => setSelection(e.target.value)} sx={{ maxWidth: 250 }}>
                                     <MenuItem value={'TODOS'}>TODOS</MenuItem>
                                     {value.map((tank, idx) => <MenuItem key={idx} value={tank.name}>{tank.name} {tank.water}</MenuItem>)}
                                 </Select>
@@ -324,7 +324,7 @@ export default function PiVolumen() {
                             color='primary'
                             onClick={reloadData}>Cargar registros</LoadingButton>
                         <Button variant='contained'
-                            color='warning' onClick={()=>{
+                            color='warning' onClick={() => {
                                 setData([]);
                                 setGraficaData([]);
                             }}>Limpiar gráfica</Button>
@@ -350,11 +350,59 @@ export default function PiVolumen() {
                                     </Select>
                                 </Box>
                             </Stack>
+                            <Stack
+                                direction={{ xs: 'column', sm: 'row' }}
+                                spacing={{ xs: 1, sm: 2, md: 4 }}
+                            >
+                                {graficaData.datasets.map((el, key) => {
+                                    return (<GenerateSelector item={el} items={graficaData} setItem={setGraficaData} idx={key} key={key} />);
+                                })}
+                            </Stack>
                             <ChartJs title='Volumen Vs Tiempo' data={graficaData} type={selectTypoGrafica} />
                         </>
                         : null}
                 </Stack>
             </Paper>
         </Stack>
+    );
+}
+const GenerateSelector = ({ item, items, setItem, idx }) => {
+    const [color, setColor] = useState(item.backgroundColor);
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <Button variant='outlined' startIcon={
+                <Box height={25} width={25} sx={{ background: color }}></Box>
+            } onClick={() => setOpen(true)}>{item.label.split(" ")[0]}</Button>
+            <Dialog open={open} onClose={() => setOpen(!open)}>
+                <DialogTitle>
+                    <Typography fontWeight='bold'>Selecciona el color para tu gráfica</Typography>
+                </DialogTitle>
+                <DialogContent>
+                    <Stack alignItems='center'>
+                        <HexColorPicker color={color} onChange={setColor} />
+                    </Stack>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {
+                        let update = items.datasets.map(e => {
+                            if (e.backgroundColor == item.backgroundColor) {
+                                return {
+                                    ...e,
+                                    backgroundColor: color
+                                }
+                            }
+                            return e;
+                        })
+                        let newValue = {
+                            ...items,
+                            datasets: update
+                        }
+                        setItem(newValue);
+                        setOpen(false);
+                    }}>Seleccionar</Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 }

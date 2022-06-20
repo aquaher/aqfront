@@ -10,7 +10,7 @@ const CardVold=({tank})=>{
     if(error) return <Stack>Lo sentimos ocurrion un error</Stack>
     if(!data) return <Skeleton/>;
     return(
-        <Paper elevation={10} sx={{p:2,height:90,bgcolor:colorsGenerator.hexLight()}}>
+        <Paper elevation={10} sx={{p:2,height:110,bgcolor:colorsGenerator.hexLight()}}>
             <Stack spacing={1} alignItems='center'>
                 <Typography fontSize={16} fontWeight='bold'>VOLUMEN DE {tank.name} - {tank.water}</Typography>
                 <Typography fontSize={24} fontWeight='bold'>{data.vol}</Typography>

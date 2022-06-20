@@ -3,7 +3,8 @@ import HeaderTurn from "@/components/operador/headerTurn";
 import { selectEvents } from "@/reducer/events";
 import { selectTurn } from "@/reducer/turn";
 import { AlertSwal } from "@/service/sweetAlert";
-import { Box, Paper, Stack, Typography, Input, TextareaAutosize, TextField, Select, MenuItem, Button, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination } from "@mui/material";
+import { Visibility } from "@mui/icons-material";
+import { Box, Paper, Stack, Typography, Input, TextareaAutosize, TextField, Select, MenuItem, Button, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination, Dialog, DialogContent, DialogContentText } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import useSWR from "swr";
@@ -22,7 +23,32 @@ const Registros = () => {
     };
     if (error) return <Stack>Lo sentimos ocurrio un error</Stack>
     if (!data) return <Skeleton />
+    const ViewDesc=({desc})=>{
+        const [open,setOpen]=useState(false);
+        return(
+            <>
+            
+            <Button startIcon={<Visibility/>} onClick={() =>setOpen(true)}>Ver descripción</Button>
+            <Dialog
+                open={open}
+                onClose={()=>setOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <DialogContent>
 
+                <Box>
+                    <DialogContentText  id="modal-modal-description" sx={{ mt: 2 }}>
+                        {desc}
+                    </DialogContentText >
+                </Box>
+                </DialogContent>
+                
+            </Dialog>
+            </>
+            
+        );
+    }
     return (
         <Stack>
             <TableContainer sx={{ maxHeight: 440 }}>
@@ -30,12 +56,13 @@ const Registros = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Turno</TableCell>
+                            <TableCell>Usuario</TableCell>
+                            <TableCell>Fecha</TableCell>
+                            <TableCell>Hora de inicio</TableCell>
                             <TableCell>Descripción</TableCell>
                             <TableCell>Evento</TableCell>
                             <TableCell>Sección</TableCell>
-                            <TableCell>Hora de inicio</TableCell>
                             <TableCell>Hora de finalización</TableCell>
-                            <TableCell>Usuario</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -43,14 +70,15 @@ const Registros = () => {
                             return (
                                 <TableRow key={idx}>
                                     <TableCell>{value.turn.turn}</TableCell>
+                                    <TableCell>{value.turn.user.username}</TableCell>
+                                    <TableCell>{new Date(value.turn.start_date).toLocaleDateString()}</TableCell>
+                                    <TableCell>{value.start_time}</TableCell>
                                     <TableCell>
-                                        <TextField multiline value={value.description} maxRows={3} />
+                                        <ViewDesc desc={value.description}/> 
                                     </TableCell>
                                     <TableCell>{value.event.name}</TableCell>
                                     <TableCell>{value.section}</TableCell>
-                                    <TableCell>{value.start_time}</TableCell>
                                     <TableCell>{value.end_time}</TableCell>
-                                    <TableCell>{value.turn.user.username}</TableCell>
                                 </TableRow>
                             )
                         })}
