@@ -76,7 +76,7 @@ const Registros = () => {
                                     <TableCell>
                                         <ViewDesc desc={value.description}/> 
                                     </TableCell>
-                                    <TableCell>{value.event.name}</TableCell>
+                                    <TableCell>{value.event?.name||''}</TableCell>
                                     <TableCell>{value.section}</TableCell>
                                     <TableCell>{value.end_time}</TableCell>
                                 </TableRow>
