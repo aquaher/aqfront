@@ -237,7 +237,7 @@ const ComponentPrint = forwardRef((props, ref) => {
                 <Stack direction='row' justifyContent='space-between' mt={2}>
                     <Stack>
                         <Typography fontWeight='bold'>
-                            Ing. Qca. Jenniffer Rizzo
+                            Ing. Qco. Alejandro Vásconez
                         </Typography>
                         <Typography fontWeight='bold'>
                             Control de Calidad
@@ -245,7 +245,7 @@ const ComponentPrint = forwardRef((props, ref) => {
                     </Stack>
                     <Stack>
                         <Typography fontWeight='bold'>
-                            Ing.Qco. Esteban Nuñez
+                            Ing.Qca. Jenniffer Rizzo
                         </Typography>
                         <Typography fontWeight='bold'>
                             Jefe de Producción
