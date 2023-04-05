@@ -10,7 +10,7 @@ export default function Powater() {
     const { turn } = useSelector(selectTurn);
     const { value } = useSelector(selectTank)
     const { water } = useParams();
-    const tipo = water.startsWith("gene") ? 'GENÉRICA' : water.toUpperCase();
+    const tipo = water.startsWith("gene") ? 'TRATADA' : water.toUpperCase();
     const tank = value.filter(e => e.water == `AGUA ${tipo}`);
     return (
         <Stack spacing={2}>
