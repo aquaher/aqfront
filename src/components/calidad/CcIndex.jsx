@@ -237,7 +237,7 @@ const ComponentPrint = forwardRef((props, ref) => {
                 <Stack direction='row' justifyContent='space-between' mt={2}>
                     <Stack>
                         <Typography fontWeight='bold'>
-                            Ing. Qca. Veronica Vinces
+                            Ing. Qca. Veronica Vinces 
                         </Typography>
                         <Typography fontWeight='bold'>
                             Control de Calidad
