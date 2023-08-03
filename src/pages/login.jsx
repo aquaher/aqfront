@@ -22,7 +22,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://www.grupoheredia.com.ec">
-        dlxavier12@outlook.com
+        sistemas@grupoheredia.com.ec
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
