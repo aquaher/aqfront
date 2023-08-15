@@ -1,5 +1,5 @@
 import { selectTank } from "@/reducer/tank";
-import { Repeat, SaveAsRounded } from "@mui/icons-material";
+import { ContentCutOutlined, Repeat, SaveAsRounded } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Paper, Stack, Typography, TextField, Box, Select, MenuItem, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -56,6 +56,7 @@ export default function Pcparametros() {
                     preConfirm: async (txt) => {
                         try {
                             const tank_id = value.find(e => e.name == optTank).id;
+                            Console.log(tank_id);
                             const params = await setParameters({ tank_id: tank_id, lote: txt, date: format(date, 'yyyy-MM-dd') });
                             setData(params)
                         } catch (error) {
