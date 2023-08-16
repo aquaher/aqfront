@@ -227,7 +227,7 @@ const ComponentPrint = forwardRef((props, ref) => {
                 </Stack>
                 <Stack>
                     <Typography fontSize={8}>
-                        *AQUAHER S.A no se responsabiliza por la variación de los parámetros del agua en tanqueros que no correspondan a la compañía de transporte HEREDIATRANS S.A, debido a que no se
+                        *AQUAHEER S.A no se responsabiliza por la variación de los parámetros del agua en tanqueros que no correspondan a la compañía de transporte HEREDIATRANS S.A, debido a que no se
                         conoce el estado interno de los mismos.
                     </Typography>
                     <Typography fontSize={8}>
