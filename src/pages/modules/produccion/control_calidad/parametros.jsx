@@ -44,6 +44,31 @@ export default function Pcparametros() {
             icon: 'question',
         }).then((res) => {
             if (res.isConfirmed) {
+                var inp="";
+                var fec=format(date, 'MM-dd-yyyy');
+                var res = fec.replace(/-/g, '');
+                const idtak=value.find(e => e.name == optTank).id;
+                switch (idtak) {
+                    case 1:
+                        inp="AP01"+res;
+                      break;
+                    case 2:
+                        inp="AP02"+res;
+                      break;
+                    case 3:
+                        inp="AUF03"+res;
+                      break;
+                    case 4:
+                        inp="A04"+res;
+                      break;
+                    case 5:
+                        inp="AT05"+res;
+                      break;
+                    case 6:
+                        inp="A06"+res;
+                      break;
+                  }
+                
                 AlertSwal.fire({
                     title: `Ingresa el número de lote para los parametros de ${optTank}?`,
                     showConfirmButton: true,
@@ -53,12 +78,18 @@ export default function Pcparametros() {
                     cancelButtonText: 'Cancelar',
                     icon: 'info',
                     input: 'text',
+                    inputValue:inp ,
                     preConfirm: async (txt) => {
                         try {
-                            const tank_id = value.find(e => e.name == optTank).id;
-                           // alert(tank_id);
-                           const params = await setParameters({ tank_id: tank_id, lote: txt, date: format(date, 'yyyy-MM-dd') });
-                            setData(params)
+                            if (!txt || txt.trim() === "") {
+                                AlertSwal.showValidationMessage("Por favor ingrese el lote");
+                            }else{
+                                const tank_id = value.find(e => e.name == optTank).id;
+                                // alert(tank_id);
+                                const params = await setParameters({ tank_id: tank_id, lote: txt, date: format(date, 'yyyy-MM-dd') });
+                                 setData(params)
+                            }
+                            
                         } catch (error) {
                             AlertSwal.showValidationMessage(
                                 `${error}`
