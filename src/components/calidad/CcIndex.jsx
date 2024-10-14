@@ -38,15 +38,15 @@ export default function CcIndex() {
             const getData = await getParameters({ date: format(date, 'yyyy-MM-dd'), tank_id: tank_id });
             if (getData.length != 0) {
                 setData(getData)
-            }else{
+            } else {
                 setData([])
                 AlertSwal.fire({
-                    title:'Lo sentimos no hay datos registrados en este dia',
-                    icon:'error'
+                    title: 'Lo sentimos no hay datos registrados en este dia',
+                    icon: 'error'
                 });
             }
         } catch (error) {
-            
+
         }
         setLoad(false)
     }
@@ -66,7 +66,7 @@ export default function CcIndex() {
             <GridToolbarContainer>
                 <Stack spacing={2} direction='row'>
                     <Button onClick={print} color='secondary' variant='contained' size='small'>Imprimir reporte</Button>
-                    <GridToolbarExport variant='contained'/>
+                    <GridToolbarExport variant='contained' />
                 </Stack>
             </GridToolbarContainer>
         );
@@ -185,7 +185,7 @@ const ComponentPrint = forwardRef((props, ref) => {
                         <Stack direction='row' spacing={2}>
                             <Stack  >
                                 <Typography>Fecha:</Typography>
-                                <Typography>Lucar de Muestreo:</Typography>
+                                <Typography>Lugar de Muestreo:</Typography>
                                 <Typography>Descripción:</Typography>
                             </Stack>
                             <Stack  >
@@ -237,20 +237,13 @@ const ComponentPrint = forwardRef((props, ref) => {
                 <Stack direction='row' justifyContent='space-between' mt={2}>
                     <Stack>
                         <Typography fontWeight='bold'>
-                            Ing. Qco. Teodoro Vélez
+                            Ing. Qco. Ricardo Cantos
                         </Typography>
                         <Typography fontWeight='bold'>
                             Control de Calidad
                         </Typography>
                     </Stack>
-                    <Stack>
-                        <Typography fontWeight='bold'>
-                            Ing.Qca. Jenniffer Rizzo
-                        </Typography>
-                        <Typography fontWeight='bold'>
-                            Jefe de Producción
-                        </Typography>
-                    </Stack>
+
                 </Stack>
             </Stack>
         </Stack>

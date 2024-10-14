@@ -6,11 +6,11 @@ import { Paper, Stack, Box, Typography, Select, MenuItem, Button, TextField } fr
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { format } from "date-fns";
-import {  useState } from "react";
+import { useState } from "react";
 
 const columns = [
-    { field: 'turno', headerName: 'Fecha', width: 150, valueGetter: (params) => `${params.row.turn.turn}` || '' },
-    { field: 'fecha', headerName: 'Tanque', width: 170, valueGetter: (params) => `${new Date(params.row.turn.start_date).toLocaleDateString() || ''}` },
+    { field: 'turno', headerName: 'Turno', width: 150, valueGetter: (params) => `${params.row.turn.turn}` || '' },
+    { field: 'fecha', headerName: 'Fecha', width: 170, valueGetter: (params) => `${new Date(params.row.turn.start_date).toLocaleDateString() || ''}` },
     { field: 'operador', headerName: 'Operador', width: 170, valueGetter: (params) => `${params.row.turn.user.username || ''}` },
     { field: 'measurement_channel', headerName: 'Canal', width: 170 },
     { field: 'measurement_time', headerName: 'Hora', width: 170 },
@@ -38,12 +38,12 @@ export default function PiMedidor() {
             icon: 'question',
             preConfirm: async () => {
                 try {
-                    let start = format(start_date,'yyyy-MM-dd')
-                    let end = format(end_date,'yyyy-MM-dd')
-                    const register = await medidor.get({url:'/rangue',data:{params:{startDate:start,endDate:end}}})
+                    let start = format(start_date, 'yyyy-MM-dd')
+                    let end = format(end_date, 'yyyy-MM-dd')
+                    const register = await medidor.get({ url: '/rangue', data: { params: { startDate: start, endDate: end } } })
                     if (register) {
                         setData(register)
-                    }else{
+                    } else {
                         setData([])
                     }
                 } catch (error) {
@@ -56,7 +56,7 @@ export default function PiMedidor() {
                 AlertSwal.fire({
                     title: 'Se cargaron los datos con éxito',
                     confirmButtonText: 'Aceptar',
-                    icon:'success'
+                    icon: 'success'
                 })
             }
         });
@@ -65,7 +65,7 @@ export default function PiMedidor() {
     const CustomToolbar = () => {
         return (
             <GridToolbarContainer>
-                {data.length!=0?<GridToolbarExport variant='contained' />:null}
+                {data.length != 0 ? <GridToolbarExport variant='contained' /> : null}
             </GridToolbarContainer>
         );
     }
@@ -78,7 +78,7 @@ export default function PiMedidor() {
                         <Typography fontWeight='bold' fontSize={20}>INFORME DE MEDIDORES DE LUZ</Typography>
                     </Stack>
                     <Stack spacing={1}>
-                    <Typography fontWeight='bold' fontSize={18}>Selecciona el Rango:</Typography>
+                        <Typography fontWeight='bold' fontSize={18}>Selecciona el Rango:</Typography>
                         <Box>
                             <DesktopDatePicker
                                 label="Selecciona la fecha"

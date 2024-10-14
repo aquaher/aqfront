@@ -1,4 +1,4 @@
-import { AdminPanelSettings, AppRegistration, AssignmentInd, Dashboard, EnergySavingsLeaf, EngineeringOutlined, Factory, GppGood, ProductionQuantityLimits, SupervisedUserCircle, TurnedIn, VerifiedUser, Water, WaterDamage, WaterfallChart, WaterfallChartRounded, WaterOutlined } from "@mui/icons-material";
+import { AdminPanelSettings, AppRegistration, AssignmentInd, Dashboard, EnergySavingsLeaf, EngineeringOutlined, Factory, GppGood, ProductionQuantityLimits, SupervisedUserCircle, TurnedIn, VerifiedUser, Water, WaterDamage, WaterDamageSharp, WaterfallChart, WaterfallChartRounded, WaterOutlined } from "@mui/icons-material";
 import { Trabajador } from "@/components/icons/trabajajdor";
 import { ChartAreasPline } from "@/components/icons/chart_areaspline";
 import { WaterCircle } from "@/components/icons/water_cricle";
@@ -6,76 +6,85 @@ import { WaterCircle } from "@/components/icons/water_cricle";
 
 export const menu = [
     {
-        name:'inicio',
-        icon:<Dashboard/>,
+        name: 'inicio',
+        icon: <Dashboard />,
 
     },
     {
-        name:'produccion',
-        icon:<EngineeringOutlined/>,
- 
-    },
-    {
-        name:'operadores',
-        icon: <Trabajador/>,
+        name: 'produccion',
+        icon: <EngineeringOutlined />,
 
     },
     {
-        name:'bitacora',
-        icon:<AppRegistration/>,
-    },
-    {
-        name:'medidor',
-        icon: <EnergySavingsLeaf/>,
-    },
-    {
-        name:'purificada',
-        icon: <Water/>,
+        name: 'operadores',
+        icon: <Trabajador />,
 
     },
     {
-        name:'ultrafiltrada',
-        icon: <WaterfallChart/>,
+        name: 'bitacora',
+        icon: <AppRegistration />,
+    },
+    {
+        name: 'medidor',
+        icon: <EnergySavingsLeaf />,
+    },
+    {
+        name: 'purificada',
+        icon: <Water />,
 
     },
     {
-        name:'generica',
-        icon: <WaterDamage/>,
+        name: 'ultrafiltrada',
+        icon: <WaterfallChart />,
+
     },
     {
-        name:'informe',
-        icon: <ChartAreasPline/>,
+        name: 'generica',
+        icon: <WaterDamage />,
     },
     {
-        name:'turno',
-        icon: <TurnedIn/>,
+        name: 'ablandada',
+        icon: <WaterDamageSharp />,
+    },
+
+    {
+        name: 'alimentacion de osmosis',
+        icon: <WaterCircle />,
     },
     {
-        name:'volumen',
-        icon: <WaterfallChartRounded/>,
+        name: 'informe',
+        icon: <ChartAreasPline />,
     },
     {
-        name:'control_calidad',
-        icon: <GppGood/>,
+        name: 'turno',
+        icon: <TurnedIn />,
     },
     {
-        name:'agua',
-        icon: <WaterOutlined/>,
+        name: 'volumen',
+        icon: <WaterfallChartRounded />,
     },
     {
-        name:'sistema',
-        icon: <AdminPanelSettings/>,
+        name: 'control_calidad',
+        icon: <GppGood />,
     },
     {
-        name:'usuarios',
-        icon: <AssignmentInd/>,
+        name: 'agua',
+        icon: <WaterOutlined />,
     },
     {
-        name:'accesos',
-        icon: <VerifiedUser/>,
+        name: 'sistema',
+        icon: <AdminPanelSettings />,
     },
     {
-        name:'produccion_total',
-        icon: <ProductionQuantityLimits/>,
+        name: 'usuarios',
+        icon: <AssignmentInd />,
+    },
+    {
+        name: 'accesos',
+        icon: <VerifiedUser />,
+    },
+    {
+        name: 'produccion_total',
+        icon: <ProductionQuantityLimits />,
     }
 ]

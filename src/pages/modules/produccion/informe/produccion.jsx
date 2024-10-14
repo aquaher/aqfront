@@ -10,8 +10,8 @@ import { HexColorPicker } from "react-colorful";
 import { useSelector } from "react-redux";
 
 const columns = [
-    { field: 'turno', headerName: 'Fecha', width: 150, valueGetter: (params) => `${params.row.turn.turn}` || '' },
-    { field: 'fecha', headerName: 'Tanque', width: 170, valueGetter: (params) => `${new Date(params.row.turn.start_date).toLocaleDateString() || ''}` },
+    { field: 'turno', headerName: 'Turno', width: 150, valueGetter: (params) => `${params.row.turn.turn}` || '' },
+    { field: 'fecha', headerName: 'Fecha', width: 170, valueGetter: (params) => `${new Date(params.row.turn.start_date).toLocaleDateString() || ''}` },
     { field: 'operador', headerName: 'Operador', width: 170, valueGetter: (params) => `${params.row.turn.user.username || ''}` },
     { field: 'tanque', headerName: 'Tanque', width: 170, valueGetter: (params) => `${params.row.tank.name}` },
     { field: 'agua', headerName: 'Agua', width: 170, valueGetter: (params) => `${params.row.tank.water}` },
@@ -28,7 +28,7 @@ export default function PiProduccion() {
     const { value } = useSelector(selectTank)
     const [selection, setSelection] = useState('TODOS');
     const [vol, setVol] = useState([0]);
-    const [totalWater,setTotalWater] = useState([])
+    const [totalWater, setTotalWater] = useState([])
     const [selectionModel, setSelectionModel] = useState([]);
     //const [color,setColor] = useState('#94bfa');
     function onClickLoad(e) {
@@ -76,7 +76,7 @@ export default function PiProduccion() {
     const CustomToolbar = () => {
         return (
             <GridToolbarContainer>
-                {totalWater.length!=0?<GridToolbarExport variant='contained' />:null}
+                {totalWater.length != 0 ? <GridToolbarExport variant='contained' /> : null}
             </GridToolbarContainer>
         );
     }
@@ -128,22 +128,22 @@ export default function PiProduccion() {
                 </Paper>
             </Stack>
             <Stack>
-                    <Paper elevation={10} sx={{p:2}}>
-                        <Stack>
-                            <DataGrid 
-                                autoHeight
-                                rows={totalWater}
-                                columns={columns}
-                                pageSize={5}
-                                rowsPerPageOptions={[5]}
-                                onSelectionModelChange={setSelectionModel}
-                                selectionModel={selectionModel}
-                                components={{
-                                    Toolbar: CustomToolbar,
-                                }}
-                            />
-                        </Stack>
-                    </Paper>
+                <Paper elevation={10} sx={{ p: 2 }}>
+                    <Stack>
+                        <DataGrid
+                            autoHeight
+                            rows={totalWater}
+                            columns={columns}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            onSelectionModelChange={setSelectionModel}
+                            selectionModel={selectionModel}
+                            components={{
+                                Toolbar: CustomToolbar,
+                            }}
+                        />
+                    </Stack>
+                </Paper>
             </Stack>
         </Stack>
     )

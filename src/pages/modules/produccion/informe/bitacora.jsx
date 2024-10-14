@@ -1,6 +1,6 @@
 import { bitacora, getRegisterBitacoraByMonth } from "@/api/bitacora";
 import { Edit, Repeat, ViewAgenda, Visibility } from "@mui/icons-material";
-import { Box, Button, MenuItem, Dialog, Paper,DialogContent, DialogContentText ,Select, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Dialog, Paper, DialogContent, DialogContentText, Select, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridToolbar, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { months } from "@/constant/utils";
@@ -68,7 +68,7 @@ const Registros = ({ start, end }) => {
     const { data, error } = useSWR({ url: '/rangue/defined', data: { params: { startDate: start, endDate: end } } }, bitacora.getByData)
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -80,30 +80,30 @@ const Registros = ({ start, end }) => {
     if (error) return <Stack>Lo sentimos ocurrio un error</Stack>
     if (!data) return <Skeleton />
 
-    const ViewDesc=({desc})=>{
-        const [open,setOpen]=useState(false);
-        return(
+    const ViewDesc = ({ desc }) => {
+        const [open, setOpen] = useState(false);
+        return (
             <>
-            <Button startIcon={<Visibility/>} onClick={() =>setOpen(true)}>Ver descripción</Button>
-            
-            <Dialog
-                open={open}
-                onClose={()=>setOpen(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <DialogContent>
+                <Button startIcon={<Visibility />} onClick={() => setOpen(true)}>Ver descripción</Button>
 
-                <Box>
-                    <DialogContentText  id="modal-modal-description" sx={{ mt: 2 }}>
-                        {desc}
-                    </DialogContentText >
-                </Box>
-                </DialogContent>
-                
-            </Dialog>
+                <Dialog
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <DialogContent>
+
+                        <Box>
+                            <DialogContentText id="modal-modal-description" sx={{ mt: 2 }}>
+                                {desc}
+                            </DialogContentText >
+                        </Box>
+                    </DialogContent>
+
+                </Dialog>
             </>
-            
+
         );
     }
     return (
@@ -124,7 +124,7 @@ const Registros = ({ start, end }) => {
                     </TableHead>
                     <TableBody>
                         {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((value, idx) => {
-                            
+
                             return (
                                 <TableRow key={idx}>
                                     <TableCell>{value.turn.turn}</TableCell>
@@ -132,7 +132,7 @@ const Registros = ({ start, end }) => {
                                     <TableCell>{new Date(value.turn.start_date).toLocaleDateString()}</TableCell>
                                     <TableCell>{value.start_time}</TableCell>
                                     <TableCell>
-                                        <ViewDesc desc={value.description}/> 
+                                        <ViewDesc desc={value.description} />
                                     </TableCell>
                                     <TableCell>{value.event.name}</TableCell>
                                     <TableCell>{value.section}</TableCell>
