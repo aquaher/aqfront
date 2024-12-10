@@ -1,13 +1,12 @@
 import { getTurnById,registerTurn,endTurnAndCreate } from "@/api/turn";
 import { getUserByOperator } from "@/api/user";
 import { useAuth, useSession } from "@/auth/AuthProvider";
-import { selectTurn, setTurn } from "@/reducer/turn";
+import { selectTurn} from "@/reducer/turn";
 import { Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Skeleton, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem, Stack, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getEvents } from "@/api/utils";
 import { AlertSwal } from "@/service/sweetAlert";
 
 export default function CoIndex() {
@@ -30,7 +29,7 @@ export default function CoIndex() {
         }
 
     }, [dispatch])
-    async function finalizeTurn(e) { 
+    async function finalizeTurn(e) {
         if(optOperador=='Selecciona aquí'){
             AlertSwal.fire({
                 title:'Tienes que seleccionar un operador'
@@ -126,7 +125,7 @@ function ModalRegister({ turn,user }) {
                 </Box>
             </DialogContent>
             <DialogActions>
-                {user.name == turn.user.username?
+                {user.preferred_username == turn.user.username?
                 turn.start_date?
                     <Button variant="contained" color='error' onClick={()=>setOpen(false)}>
                     Cerrar

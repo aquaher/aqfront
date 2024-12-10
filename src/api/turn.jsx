@@ -1,12 +1,13 @@
 import { setTurn } from "@/reducer/turn";
 import { instance } from "@/service/instance"
 const path = '/turn';
+
 function getTurnById({id}){
     return async (dispatch)=>{
         instance.get(path,{params:{id:id}}).then(data=>{
             dispatch(setTurn(data.data))
         })
-    }    
+    }
 }
 /**
  * turno actula y usuario a pasar el turno

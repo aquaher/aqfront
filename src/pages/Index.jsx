@@ -19,10 +19,10 @@ export default function Index() {
                 if(e=='/operador'){
                     return <CoIndex/>;
                 }
-                if(e=='/despachador'){
+                else if(e=='/despachador'){
                     return <CvVolumen/>
                 }
-                if(e=='/ventas'){
+                else if(e=='/ventas'){
                     return <Vindex/>;
                 }
                 

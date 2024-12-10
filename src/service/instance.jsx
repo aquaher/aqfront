@@ -19,7 +19,7 @@ function Axios () {
 }
 function AxiosAdmin () {
     const instance = axios.create({
-        baseURL: import.meta.env.VITE_BASE_AUTH_ADMIN
+        baseURL: import.meta.env.VITE_BASE_API
     })
     instance.interceptors.request.use(async (request) => {
         const token = await cookie.getCookie(import.meta.env.VITE_COOKIE_TOKEN)

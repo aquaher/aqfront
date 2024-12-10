@@ -1,10 +1,23 @@
-import { listAcces, postCreatePermission, deletePermission } from "@/api/access";
-import { getListMenu } from "@/api/menu";
-import { getUsers } from "@/api/user";
-import { AlertSwal } from "@/service/sweetAlert";
-import { KeyboardArrowDown, KeyboardArrowUp, Shield } from "@mui/icons-material";
-import { Paper, Skeleton, Stack, Table, TableCell, TableHead, TableRow, TableBody, TableContainer, IconButton, Tooltip, Checkbox, TablePagination, Box, Grid, Collapse, Typography, Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import {listAcces, postCreatePermission, deletePermission} from "@/api/access";
+import {getListMenu} from "@/api/menu";
+import {getUsers} from "@/api/user";
+import {AlertSwal} from "@/service/sweetAlert";
+import {Shield} from "@mui/icons-material";
+import {
+    Paper,
+    Skeleton,
+    Stack,
+    Table,
+    TableCell,
+    TableHead,
+    TableRow,
+    TableBody,
+    TableContainer,
+    Checkbox,
+    TablePagination,
+    Button
+} from "@mui/material";
+import {useEffect, useState} from "react";
 
 export default function Saccesos() {
     const [users, setUsers] = useState();
@@ -69,8 +82,9 @@ export default function Saccesos() {
             }
         })()
     }, []);
+
     async function getPermission(e, user) {
-        const acceso = await listAcces({ user_id: user.id });
+        const acceso = await listAcces({user_id: user.id});
         if (acceso) {
             let per = [];
             acceso.map(value => per.push(value.menu.id));
@@ -79,11 +93,12 @@ export default function Saccesos() {
             setUser(user)
         }
     }
+
     async function postPermission(e) {
         if (!user) {
             AlertSwal.fire({
                 title: 'Debes seleccionar un usuario',
-                icon:'error'
+                icon: 'error'
             })
         } else {
             AlertSwal.fire({
@@ -118,7 +133,7 @@ export default function Saccesos() {
                         });
                         oldAcces.map(async item => {
                             if (selected.indexOf(item.menu.id) === -1) {
-                                await deletePermission({ id: item.id })
+                                await deletePermission({id: item.id})
                             }
                         })
                         acceso.map(async item => {
@@ -139,7 +154,7 @@ export default function Saccesos() {
                         confirmButtonText: 'Aceptar',
                         preConfirm: async () => {
                             try {
-                                const acc = await listAcces({ user_id: user.id });
+                                const acc = await listAcces({user_id: user.id});
                                 if (acc) {
                                     let per = [];
                                     acc.map(value => per.push(value.menu.id));
@@ -156,23 +171,24 @@ export default function Saccesos() {
         }
 
     }
+
     if (!users) return (
         <>
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
+            <Skeleton/>
+            <Skeleton/>
+            <Skeleton/>
+            <Skeleton/>
+            <Skeleton/>
         </>
     );
     return (
         <Stack>
-            <Paper elevation={10} sx={{ p: 2 }}>
+            <Paper elevation={10} sx={{p: 2}}>
                 <Stack spacing={2}>
-                    <Stack direction={{ xs: 'column', sm: 'row' }}
-                        spacing={{ xs: 1, sm: 2, md: 4 }}>
-                        <TableContainer sx={{ maxHeight: 440 }}>
-                            <Table sx={{ minWidth: 300 }} >
+                    <Stack direction={{xs: 'column', sm: 'row'}}
+                           spacing={{xs: 1, sm: 2, md: 4}}>
+                        <TableContainer sx={{maxHeight: 440}}>
+                            <Table sx={{minWidth: 300}}>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Nombre de usuario</TableCell>
@@ -186,8 +202,9 @@ export default function Saccesos() {
                                             <TableRow key={idx}>
                                                 <TableCell>{user.username}</TableCell>
                                                 <TableCell>{user.type}</TableCell>
-                                                <TableCell >
-                                                    <Button onClick={e => getPermission(e, user)} startIcon={<Shield />} variant='contained' color='primary'>Permisos</Button>
+                                                <TableCell>
+                                                    <Button onClick={e => getPermission(e, user)} startIcon={<Shield/>}
+                                                            variant='contained' color='primary'>Permisos</Button>
                                                 </TableCell>
                                             </TableRow>
                                         );
@@ -196,8 +213,8 @@ export default function Saccesos() {
                             </Table>
                         </TableContainer>
                         <Stack>
-                            <TableContainer sx={{ maxHeight: 440 }}>
-                                <Table sx={{ minWidth: 400 }}>
+                            <TableContainer sx={{maxHeight: 440}}>
+                                <Table sx={{minWidth: 400}}>
                                     <EnhancedTableHead
                                         numSelected={selected.length}
                                         onSelectAllClick={handleSelectAllClick}
@@ -258,9 +275,8 @@ export default function Saccesos() {
 }
 
 
-
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, numSelected, rowCount } =
+    const {onSelectAllClick, numSelected, rowCount} =
         props;
 
     return (

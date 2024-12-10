@@ -1,7 +1,6 @@
 import authentication from "@/api/auth";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { authenticated } from "../service/auth";
 
 const AuthContext = createContext(null);
 
@@ -55,10 +54,8 @@ function AuthProvider({ children }) {
     }
     async function signOut() {
         try {
-            const data = await authentication.logout();
-            if(data){
-                navigate('/login');
-            }
+            await authentication.logout();
+            navigate('/login');
         } catch (error) {
             
         }
