@@ -1,4 +1,21 @@
-import { AdminPanelSettings, AppRegistration, AssignmentInd, Dashboard, EnergySavingsLeaf, EngineeringOutlined, Factory, GppGood, ProductionQuantityLimits, SupervisedUserCircle, TurnedIn, VerifiedUser, Water, WaterDamage, WaterDamageSharp, WaterfallChart, WaterfallChartRounded, WaterOutlined } from "@mui/icons-material";
+import {
+    AdminPanelSettings,
+    AppRegistration,
+    AssignmentInd,
+    Dashboard,
+    EnergySavingsLeaf,
+    EngineeringOutlined,
+    GppGood,
+    ProductionQuantityLimits,
+    TurnedIn,
+    VerifiedUser,
+    Water,
+    WaterDamage,
+    WaterDrop,
+    WaterfallChart,
+    WaterfallChartRounded,
+    WaterOutlined
+} from "@mui/icons-material";
 import { Trabajador } from "@/components/icons/trabajajdor";
 import { ChartAreasPline } from "@/components/icons/chart_areaspline";
 import { WaterCircle } from "@/components/icons/water_cricle";
@@ -44,7 +61,7 @@ export const menu = [
     },
     {
         name: 'ablandada',
-        icon: <WaterDamageSharp />,
+        icon: <WaterDrop />,
     },
 
     {

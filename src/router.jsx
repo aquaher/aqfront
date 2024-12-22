@@ -20,6 +20,7 @@ import SIndex from "./pages/modules/sistema";
 import Susuarios from "./pages/modules/sistema/usuarios";
 import Saccesos from "./pages/modules/sistema/accesos";
 import PiProduccion from "./pages/modules/produccion/informe/produccion";
+import PoAblandamiento from "@/pages/modules/produccion/operador/ablandamiento";
 
 
 function RequiredAuth({ children }) {
@@ -45,6 +46,7 @@ export function Navigation() {
                     <Route path="operadores" element={<PoIndex />} >
                         <Route path=":water" element={<Powater />} />
                         <Route path="volumen" element={<PoVolumen />} />
+                        <Route path="ablandada" element={<PoAblandamiento />} />
                         <Route path="bitacora" element={<Bitacora />} />
                         <Route path="medidor" element={<Medidor />} />
                     </Route>
